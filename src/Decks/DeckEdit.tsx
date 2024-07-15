@@ -280,18 +280,20 @@ const IdentityChecker = () => {
 
 export const DeckEdit = () => {
     const [cardData, setCardData] = useState<Partial<CardData> | null>(null);
-    const [playerId, setPlayerId] = useState(1);
+    const [playerId, setPlayerId] = useState(null);
     const [ownerName, setOwnerName] = useState('');
     const { data: player } = useGetOne('player', { id: playerId });
 
     const handlePlayerChange = (event: any) => {
-        const selectedPlayerId = event.target.value; // Assuming event.target.value contains the player ID
+        const selectedPlayerId = event.target.value;
         setPlayerId(selectedPlayerId);
     };
 
     useEffect(() => {
-        setOwnerName(player?.name);
-    }, [playerId])
+        if (player) {
+            setOwnerName(player.name);
+        }
+    }, [player]);
 
     return (
         <Grid container spacing={2}>
