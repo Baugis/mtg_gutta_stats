@@ -9,16 +9,27 @@
     "format": "prettier --write ./src"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@mui/material": "^5.16.0",
+    "axios": "^1.7.2",
+    "mtgsdk": "^1.0.1",
+    "mtgsdk-ts": "^1.1.2",
+    "ra-data-json-server": "^5.0.3",
+    "ra-input-rich-text": "^5.0.3",
     "react": "^18.3.0",
     "react-admin": "^5.0.0",
-    "react-dom": "^18.3.0"
+    "react-dom": "^18.3.0",
+    "request": "^2.88.2"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "^5.60.1",
-    "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@types/node": "^20.10.7",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
     "@vitejs/plugin-react": "^4.0.1",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",

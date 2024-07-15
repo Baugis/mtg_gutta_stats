@@ -6,6 +6,10 @@ Install the application dependencies by running:
 
 ```sh
 npm install
+
+npm install mtgsdk
+npm install mtgsdk-ts
+npm install axios
 ```
 
 ## Development

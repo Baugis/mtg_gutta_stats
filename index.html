@@ -1,125 +1,793 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-        />
-        <meta name="theme-color" content="#000000" />
-        <link rel="manifest" href="./manifest.json" />
-        <link rel="shortcut icon" href="./favicon.ico" />
-        <title>mtg-gutta-stats</title>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-                font-family: sans-serif;
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <title>MagiGutta</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background-color: #0d101f !important;
+        }
+
+        #main-content {
+            background-color: #0d101f !important;
+        }
+
+        h1,
+        .MuiTypography-h1 {
+            font-size: 2.027rem;
+        }
+
+        h2,
+        .MuiTypography-h2 {
+            font-size: 1.802rem;
+            font-weight: 400;
+        }
+
+        h3,
+        .MuiTypography-h3 {
+            font-size: 1.602rem;
+        }
+
+        h4,
+        .MuiTypography-h4 {
+            font-size: 1.424rem;
+        }
+
+        h5,
+        .MuiTypography-h5 {
+            font-size: 1.266rem;
+            font-weight: 500;
+        }
+
+        h6,
+        .MuiTypography-h6 {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+
+        .mt-5 {
+            margin-top: 20px;
+        }
+
+        .mx-5 {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .flex-column {
+            flex-direction: column;
+        }
+
+
+        .mana-b,
+        .mana-g,
+        .mana-r,
+        .mana-u,
+        .mana-w {
+            position: relative;
+            top: 2px;
+            display: inline-block;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            width: 15px;
+            height: 15px;
+            background: url(https://draftsim.com/wp-content/plugins/mana-symbols/mana-symbols.png) no-repeat;
+            vertical-align: baseline;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        .mana-w {
+            background-position: 0 0;
+        }
+
+        .mana-u {
+            background-position: -15px 0;
+        }
+
+        .mana-b {
+            background-position: -30px 0;
+        }
+
+        .mana-r {
+            background-position: -45px 0;
+        }
+
+        .mana-g {
+            background-position: -60px 0;
+        }
+
+        .form {
+            .MuiPaper-root {
+                background-color: transparent;
+                box-shadow: none;
             }
 
-            .loader-container {
+            .bg-white {
+                background-color: white;
+                box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            }
+
+            .p-4 {
+                padding: 10px 40px;
+            }
+        }
+
+        .deckCommanderImage img {
+            height: 300px !important;
+        }
+
+        .deckListBox {
+            background: rgb(2, 0, 36);
+            background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(19, 24, 46, 1) 0%, rgba(48, 34, 53, 1) 100%);
+            border-radius: 4px;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .matchesBox {
+            position: relative;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            padding: 10px;
+            color: white;
+            background: rgb(2, 0, 36);
+            background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(19, 24, 46, 1) 0%, rgba(48, 34, 53, 1) 100%);
+
+            .content {
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                flex-direction: column;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background-color: #fafafa;
+                flex-wrap: wrap;
+            }
+        }
+
+        .matchHistory {
+            position: relative;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            padding: 10px;
+
+            * {
+                margin: 0;
             }
 
-            /* CSS Spinner from https://projects.lukehaas.me/css-loaders/ */
+            &.winner {
+                background: rgb(2, 0, 36);
+                background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(19, 24, 46, 1) 0%, rgba(34, 54, 34, 1) 100%);
+            }
 
-            .loader,
-            .loader:before,
-            .loader:after {
+            &.loser {
+                background: rgb(2, 0, 36);
+                background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(19, 24, 46, 1) 0%, rgb(51, 30, 35) 100%);
+            }
+
+            .content {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+
+        }
+
+        .matchHistoryDeckImage {
+            margin: 3px 0;
+
+            img {
+                display: flex;
+                align-items: center;
+                width: 50px;
+                height: auto;
+                border-radius: 4px;
+            }
+
+            &.winnerBorder {
+                img {
+                    border: 2px solid #9efa56;
+                }
+            }
+
+            &.loserBorder {
+                img {
+                    border: 2px solid #f65861;
+                }
+            }
+        }
+
+        .historyTinyHeading {
+            font-size: 0.8rem !important;
+            font-weight: 600 !important;
+        }
+
+        .mobileGridImage img {
+            width: 72px !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .deckShowMobile img {
+            width: 100% !important;
+            height: auto !important;
+            margin: 0 !important;
+        }
+
+        .show-page {
+            .MuiToolbar-root {
+                display: none;
+                background-color: #0d101f;
+                color: white;
+
+                svg {
+                    fill: white;
+                }
+            }
+        }
+
+
+
+
+
+        /* DASHBOARD START */
+        .dashboardCard {
+            background-image: url('public\images\cards-large.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding: 60px 30px;
+            border-radius: 15px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px !important;
+
+            h1 {
+                color: white;
+                margin-top: 0;
+            }
+
+            p {
+                color: rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        .dashboardImage {
+            position: relative;
+
+            img {
+                position: absolute;
+                z-index: 5;
+                height: 100%;
+                scale: 1.3;
+                left: 200px;
+            }
+        }
+
+        .playersCard {
+            background-image: url('public\images\cards-large.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px !important;
+
+            h1 {
+                color: white;
+                margin-top: 0;
+            }
+
+            p {
+                color: rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        .playerBox {
+            border-bottom: 1px solid rgba(90, 82, 82, 0.3);
+            color: white;
+            padding: 13px 0;
+
+            img {
+                width: 40px;
+                height: 40px;
+                aspect-ratio: 1;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+
+        .dashboardMiniBox {
+            aspect-ratio: 1 !important;
+            width: 65px;
+            height: 65px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .rivalMiniBox {
+            aspect-ratio: 1 !important;
+            width: 35px;
+            height: 35px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .dashboardMiniBox.small {
+            font-size: 16px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .newDeckBox {
+            padding: 20px 20px 15px 20px;
+            background: rgb(2, 0, 36);
+            background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(19, 24, 46, 1) 0%, rgba(48, 34, 53, 1) 100%);
+            border-radius: 4px;
+        }
+
+        .newDeckType {
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: rgba(226, 88, 100, 0.2);
+            font-size: 0.9rem;
+            width: max-content;
+            color: rgb(226, 88, 100);
+        }
+
+        .newMatchBox {
+            background-color: #13182e;
+            border-radius: 6px;
+            color: white;
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: rgba(50, 52, 53, 0.2) 0px 8px 24px;
+
+            .playerImage {
+                width: 25px;
+                height: 25px;
+                aspect-ratio: 1;
+                object-fit: cover;
+            }
+        }
+
+        .RaSidebar-fixed {
+            background-color: #13182e;
+
+            .sideMenu {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            a {
+                color: #868ba3 !important;
+                border: 1px solid #868ba352;
+                margin: 5px 0;
+                border-radius: 8px;
+                padding: 8px 10px;
+            }
+
+            svg {
+                fill: #aaaebe;
+            }
+        }
+
+        /* Mobile sidebar */
+        .css-1yc9rti-MuiModal-root-MuiDrawer-root-RaSidebar-root .MuiPaper-root,
+        .RaSidebar-paper {
+            background-color: #13182e !important;
+
+            p {
+                margin: 5px 10px;
+            }
+
+            a {
+                color: #868ba3 !important;
+                border: 1px solid #868ba352;
+                margin: 5px 10px;
+                border-radius: 8px;
+                padding: 8px 10px;
+            }
+
+            svg {
+                fill: #aaaebe;
+            }
+
+            .logoutButton {
+                color: #868ba3 !important;
+                border: 1px solid #868ba352;
+                margin: 5px 10px;
+                border-radius: 8px;
+                padding: 8px 10px;
+            }
+        }
+
+        .css-4t3x6l-MuiPaper-root-MuiDrawer-paper {
+            background-color: #13182e !important;
+
+            svg {
+                fill: #aaaebe;
+            }
+        }
+
+        .playerProfile {
+            color: white;
+
+            .playerProfileImage img {
+                width: 80px;
+                height: 80px;
+                aspect-ratio: 1;
+                object-fit: cover;
                 border-radius: 50%;
             }
 
-            .loader {
-                color: #283593;
-                font-size: 11px;
-                text-indent: -99999em;
-                margin: 55px auto;
-                position: relative;
-                width: 10em;
-                height: 10em;
-                box-shadow: inset 0 0 0 1em;
-                -webkit-transform: translateZ(0);
-                -ms-transform: translateZ(0);
-                transform: translateZ(0);
-            }
+            .playerSectionBox {
+                padding: 15px;
+                border-radius: 6px;
 
-            .loader:before,
-            .loader:after {
-                position: absolute;
-                content: '';
-            }
+                .playerSectionBoxIcon {
+                    border-radius: 50%;
+                    aspect-ratio: 1;
+                    width: 30px;
+                    height: 30px;
 
-            .loader:before {
-                width: 5.2em;
-                height: 10.2em;
-                background: #fafafa;
-                border-radius: 10.2em 0 0 10.2em;
-                top: -0.1em;
-                left: -0.1em;
-                -webkit-transform-origin: 5.2em 5.1em;
-                transform-origin: 5.2em 5.1em;
-                -webkit-animation: load2 2s infinite ease 1.5s;
-                animation: load2 2s infinite ease 1.5s;
-            }
-
-            .loader:after {
-                width: 5.2em;
-                height: 10.2em;
-                background: #fafafa;
-                border-radius: 0 10.2em 10.2em 0;
-                top: -0.1em;
-                left: 5.1em;
-                -webkit-transform-origin: 0px 5.1em;
-                transform-origin: 0px 5.1em;
-                -webkit-animation: load2 2s infinite ease;
-                animation: load2 2s infinite ease;
-            }
-
-            @-webkit-keyframes load2 {
-                0% {
-                    -webkit-transform: rotate(0deg);
-                    transform: rotate(0deg);
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        padding: 6px;
+                    }
                 }
-                100% {
-                    -webkit-transform: rotate(360deg);
-                    transform: rotate(360deg);
+
+                &.decks {
+                    background: rgb(2, 0, 36);
+                    background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(19, 24, 46, 1) 0%, rgba(48, 44, 36, 1) 100%);
+                }
+
+                &.matches {
+                    background: rgb(2, 0, 36);
+                    background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(19, 24, 46, 1) 0%, rgba(29, 34, 76, 1) 100%);
+                }
+
+
+
+            }
+        }
+
+        .rivalBox {
+            background-color: #13182e;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .deckShowBox {
+            color: white;
+        }
+
+        .deckBoxLink {
+            background-color: #13182e;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .createBox {
+            margin-bottom: 100px;
+
+            .MuiCardContent-root {
+                padding-bottom: 0;
+            }
+
+            .Mui-focused {
+                color: white !important;
+            }
+
+            .Mui-readOnly {
+                input {
+                    color: rgba(255, 255, 255, 0.5);
+                    fill: rgba(255, 255, 255, 0.5) !important;
+                    -webkit-text-fill-color: rgba(255, 255, 255, 0.5)
+                }
+
+
+            }
+
+            .MuiPaper-root {
+                background-color: #13182e !important;
+            }
+
+            .MuiToolbar-root {
+                background-color: #13182e !important;
+                border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+
+                button {
+                    background-color: #4744f7;
+                    color: white !important;
                 }
             }
 
-            @keyframes load2 {
-                0% {
-                    -webkit-transform: rotate(0deg);
-                    transform: rotate(0deg);
-                }
-                100% {
-                    -webkit-transform: rotate(360deg);
-                    transform: rotate(360deg);
+            .MuiInputBase-root,
+            span {
+                color: white !important;
+            }
+
+            svg {
+                fill: white;
+            }
+
+            fieldset {
+                border-color: rgba(255, 255, 255, 0.2) !important;
+            }
+
+            .dateInput input {
+                height: 39px;
+            }
+
+            label {
+                color: white !important;
+            }
+        }
+
+        .loginForm {
+            background-color: #0d101f !important;
+
+            .MuiCardContent-root {
+                padding-bottom: 0;
+            }
+
+            .MuiPaper-root {
+                background-color: #13182e !important;
+            }
+
+            .MuiToolbar-root {
+                background-color: #13182e !important;
+                border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+
+                button {
+                    background-color: #4744f7;
+                    color: white !important;
                 }
             }
-        </style>
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-            rel="stylesheet"
-        />
-    </head>
 
-    <body>
-        <noscript> You need to enable JavaScript to run this app. </noscript>
-        <div id="root">
-            <div class="loader-container">
-                <div class="loader">Loading...</div>
-            </div>
+            .MuiInputBase-root,
+            span {
+                color: white !important;
+            }
+
+            svg {
+                fill: white;
+            }
+
+            fieldset {
+                border-color: rgba(255, 255, 255, 0.2) !important;
+            }
+
+            .dateInput input {
+                height: 39px;
+            }
+
+            label {
+                color: white !important;
+            }
+        }
+
+        .profileEdit {
+            color: white;
+
+            .MuiCardContent-root {
+                padding-bottom: 0;
+            }
+
+            .MuiPaper-root {
+                background-color: #13182e !important;
+            }
+
+            .MuiToolbar-root {
+                background-color: #13182e !important;
+                border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+
+                button {
+                    background-color: #4744f7;
+                    color: white !important;
+                }
+            }
+
+            .MuiInputBase-root,
+            span {
+                color: white !important;
+            }
+
+            svg {
+                fill: white;
+            }
+
+            fieldset {
+                border-color: rgba(255, 255, 255, 0.2) !important;
+            }
+
+            .dateInput input {
+                height: 39px;
+            }
+
+            label {
+                color: white !important;
+            }
+
+            .RaFileInput-dropZone {
+                background-color: #13182e !important;
+                color: rgba(255, 255, 255, 0.658) !important;
+            }
+        }
+
+        .desktopPlayerDeckList {
+            color: white !important;
+
+            a,
+            p,
+            div {
+                color: white;
+            }
+
+            svg {
+                fill: white;
+            }
+
+            button {
+                color: white;
+            }
+
+            .MuiTableCell-head {
+                background-color: #13182e !important;
+                color: white !important;
+
+                input {
+                    color: white !important;
+                }
+
+                span {
+                    color: white;
+                }
+
+                svg {
+                    color: white !important;
+                    fill: white;
+                }
+            }
+
+            .MuiTableCell-body {
+                padding-top: 15px;
+                padding-bottom: 15px;
+                color: white;
+
+                span {
+                    color: rgba(255, 255, 255, 0.801);
+                }
+            }
+        }
+
+
+
+
+
+
+
+        .loader-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fafafa;
+        }
+
+        /* CSS Spinner from https://projects.lukehaas.me/css-loaders/ */
+
+        .loader,
+        .loader:before,
+        .loader:after {
+            border-radius: 50%;
+        }
+
+        .loader {
+            color: #283593;
+            font-size: 11px;
+            text-indent: -99999em;
+            margin: 55px auto;
+            position: relative;
+            width: 10em;
+            height: 10em;
+            box-shadow: inset 0 0 0 1em;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
+        .loader:before,
+        .loader:after {
+            position: absolute;
+            content: '';
+        }
+
+        .loader:before {
+            width: 5.2em;
+            height: 10.2em;
+            background: #fafafa;
+            border-radius: 10.2em 0 0 10.2em;
+            top: -0.1em;
+            left: -0.1em;
+            -webkit-transform-origin: 5.2em 5.1em;
+            transform-origin: 5.2em 5.1em;
+            -webkit-animation: load2 2s infinite ease 1.5s;
+            animation: load2 2s infinite ease 1.5s;
+        }
+
+        .loader:after {
+            width: 5.2em;
+            height: 10.2em;
+            background: #fafafa;
+            border-radius: 0 10.2em 10.2em 0;
+            top: -0.1em;
+            left: 5.1em;
+            -webkit-transform-origin: 0px 5.1em;
+            transform-origin: 0px 5.1em;
+            -webkit-animation: load2 2s infinite ease;
+            animation: load2 2s infinite ease;
+        }
+
+        @-webkit-keyframes load2 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes load2 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <noscript> You need to enable JavaScript to run this app. </noscript>
+    <div id="root">
+        <div class="loader-container">
+            <div class="loader">Loading...</div>
         </div>
-    </body>
-    <script type="module" src="/src/index.tsx"></script>
+    </div>
+</body>
+<script type="module" src="/src/index.tsx"></script>
+
 </html>
