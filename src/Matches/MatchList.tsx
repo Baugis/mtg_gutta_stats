@@ -86,6 +86,7 @@ const MatchHistory = () => {
     // State for filters and search
     const [searchQuery, setSearchQuery] = useState('');
     const [filterType, setFilterType] = useState('');
+    const [filterDate, setFilterDate] = useState('');
 
     const { data } = useGetList(
         'match',
@@ -93,7 +94,9 @@ const MatchHistory = () => {
             pagination: { page: 1, perPage: 100 },
             sort: { field: 'id', order: 'DESC' },
             filter: {
-                q: searchQuery, type: filterType ? filterType : null
+                q: searchQuery,
+                type: filterType ? filterType : null,
+                date_played: filterDate ? filterDate : null
             }
         },
     );
@@ -150,6 +153,10 @@ const MatchHistory = () => {
         setFilterType(event.target.value);
     };
 
+    const handleFilterDateChange = (event) => {
+        setFilterDate(event.target.value);
+    };
+
     console.log("Data: ", data)
 
     return (
@@ -175,6 +182,21 @@ const MatchHistory = () => {
                         <MenuItem value="4 man ffa">Free For All (4 players)</MenuItem>
                         <MenuItem value="Two head giant">Two Headed Giant</MenuItem>
                         <MenuItem value="star">Star format</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth variant='outlined' margin="normal" sx={{ marginTop: "8px" }}>
+                    <InputLabel>Date</InputLabel>
+                    <Select
+                        value={filterDate}
+                        onChange={handleFilterDateChange}
+                        label="Date"
+                    >
+                        <MenuItem value="">All</MenuItem>
+                        <MenuItem value="last_7_days">Last 7 days</MenuItem>
+                        <MenuItem value="this_month">This month</MenuItem>
+                        <MenuItem value="last_month">Last month</MenuItem>
+                        <MenuItem value="this_year">This Year</MenuItem>
+                        <MenuItem value="last_year">Last Year</MenuItem>
                     </Select>
                 </FormControl>
             </Box>
