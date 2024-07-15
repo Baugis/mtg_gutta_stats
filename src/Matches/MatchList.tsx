@@ -1,7 +1,8 @@
-import { useMediaQuery, Theme, Grid, Card, Box, Typography } from '@mui/material';
+import { useMediaQuery, Theme, Grid, Card, Box, Typography, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { List, TextInput, SelectInput, TextField, DateField, ReferenceManyField, SingleFieldList, ChipField, ReferenceField, BooleanField, Datagrid, useGetList, Link, useGetOne, CreateButton } from 'react-admin';
 import { useRecordContext } from 'react-admin';
+import TextField2 from '@mui/material/TextField';
 
 const DecksWinner = (label: any) => {
     const record = useRecordContext();
@@ -81,11 +82,19 @@ const formatDate = (inputDate: any) => {
 
 const MatchHistory = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
+
+    // State for filters and search
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterType, setFilterType] = useState('');
+
     const { data } = useGetList(
         'match',
         {
             pagination: { page: 1, perPage: 100 },
             sort: { field: 'id', order: 'DESC' },
+            filter: {
+                q: searchQuery, type: filterType ? filterType : null
+            }
         },
     );
 
@@ -126,17 +135,49 @@ const MatchHistory = () => {
                 return 'Free For All (4 players)'
             case 'Two head giant':
                 return 'Two Headed Giant'
-            case 'star':
+            case 'Stjerne':
                 return 'Star format'
             default:
                 return null
         }
     }
 
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const handleFilterTypeChange = (event) => {
+        setFilterType(event.target.value);
+    };
+
     console.log("Data: ", data)
 
     return (
         <>
+            <Box mb={2} className="matchHistoryBox">
+                <TextField2
+                    label="Search"
+                    variant="outlined"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    fullWidth
+                />
+                <FormControl fullWidth variant="outlined" margin="normal">
+                    <InputLabel>Type</InputLabel>
+                    <Select
+                        value={filterType}
+                        onChange={handleFilterTypeChange}
+                        label="Type"
+                    >
+                        <MenuItem value="">All</MenuItem>
+                        <MenuItem value="1v1">1v1</MenuItem>
+                        <MenuItem value="3 man ffa">Free For All (3 players)</MenuItem>
+                        <MenuItem value="4 man ffa">Free For All (4 players)</MenuItem>
+                        <MenuItem value="Two head giant">Two Headed Giant</MenuItem>
+                        <MenuItem value="star">Star format</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
             {data?.map((match, index) => {
                 const teams = match.players.reduce((acc: any, player: any) => {
                     if (!acc[player.team]) {
