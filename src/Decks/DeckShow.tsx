@@ -330,10 +330,10 @@ export const DeckShow = () => {
             <Form>
                 <IdentityChecker />
                 {isSmall ? (
-                    <Box className="deckShowBox" pb={4}>
+                    <Box className="deckShowBox" pb={4} mt={3}>
                         <Box px={1} pt={2}>
-                            <Typography mb={1}>
-                                <TextField source="name" variant='h5' />
+                            <Typography mb={1} variant='h5'>
+                                <TextField source="name" variant='h5' /> - (<TextField source="owner_name" variant='h5' fontWeight={300} />)
                             </Typography>
                             <ImageField source='card_data.image_uris.art_crop' className="deckShowMobile" />
                         </Box>
