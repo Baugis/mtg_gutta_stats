@@ -708,6 +708,48 @@
             align-items: baseline !important;
         }
 
+        .retiredMark {
+            padding: 5px 10px;
+            background-color: #0d101f;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .retiredOverlay {
+            position: relative;
+        }
+
+        .retiredOverlay::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .retiredOverlay img {
+            margin: 0 !important;
+        }
+
+        .retiredOverlaySmall {
+            position: relative;
+        }
+
+        .retiredOverlaySmall::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
 
 
         .loader-container {

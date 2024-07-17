@@ -21,7 +21,7 @@ const MatchCreate = () => {
 
     const [create] = useCreate();
     const redirect = useRedirect();
-    const { data: deckChoices, isLoading, error } = useGetList('deck', { pagination: { page: 1, perPage: 200 }, sort: { field: 'name', order: 'ASC' } });
+    const { data: deckChoices, isLoading, error } = useGetList('deck', { pagination: { page: 1, perPage: 200 }, sort: { field: 'name', order: 'ASC' }, filter: { retired: 0 } });
 
     const handleTypeChange = (event: any) => {
         const selectedType = event.target.value;
@@ -161,14 +161,6 @@ const MatchCreate = () => {
                             <>
                                 {deckCount === 5 && (
                                     <Box mb={2}>
-                                        {/* <TextField
-                                            label="Number of Winners"
-                                            type="number"
-                                            value={winnerCount}
-                                            onChange={handleWinnerCountChange}
-                                            inputProps={{ min: 1, max: 2 }}
-                                            fullWidth
-                                        /> */}
                                         <FormControl component="fieldset">
                                             <FormLabel component="legend" sx={{ color: 'white' }}>Number of Winners</FormLabel>
                                             <RadioGroup
@@ -195,6 +187,7 @@ const MatchCreate = () => {
                                             reference="deck"
                                             sort={{ field: 'name', order: 'ASC' }}
                                             perPage={200}
+                                            filter={{ retired: 0 }}
                                         >
                                             <AutocompleteInput
                                                 optionText={deckOptionText}

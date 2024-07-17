@@ -109,7 +109,7 @@ const MatchHistory = () => {
     const losers = [];
 
     data?.map((item) => {
-        item.players.map((player) => {
+        item.players.map((player: any) => {
             if (player.result == 'winner') {
                 winners.push(player)
             } else {
@@ -149,15 +149,15 @@ const MatchHistory = () => {
         }
     }
 
-    const handleSearchChange = (event) => {
+    const handleSearchChange = (event: any) => {
         setTmpSearchQuery(event.target.value);
     };
 
-    const handleFilterTypeChange = (event) => {
+    const handleFilterTypeChange = (event: any) => {
         setFilterType(event.target.value);
     };
 
-    const handleFilterDateChange = (event) => {
+    const handleFilterDateChange = (event: any) => {
         setFilterDate(event.target.value);
     };
 
@@ -217,7 +217,7 @@ const MatchHistory = () => {
                     return acc;
                 }, {});
 
-                const teamOrder = Object.keys(teams).sort((a, b) => a - b);
+                const teamOrder = Object.keys(teams).sort((a: any, b: any) => a - b);
 
                 return (
                     <Box key={match.id}>

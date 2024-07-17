@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import DeckColors from '../Decks/DeckColors';
 import { Typography, useMediaQuery, Theme, IconButton } from '@mui/material';
 import { countGamesAgainstPlayers } from '../Helpers/utils';
+import { checkRetired } from '../Helpers/checkRetired';
 
 interface DeckStat {
     id: number;
@@ -128,67 +129,6 @@ const Decks = () => {
     );
 };
 
-const DecksMobile = () => {
-    const record = useRecordContext();
-    if (!record) return null;
-
-    const { data } = useGetList('deck', { filter: { owner: record.id } })
-
-    return (
-        <>
-            {data?.length > 0 ? (
-                data?.map(record => (
-                    <Link to={`/deck/${record.id}/show`} style={{ textDecoration: 'none', color: 'inherit' }} key={record.id}>
-                        <Grid>
-                            <RecordContextProvider key={record.id} value={record}>
-                                <Box display="flex">
-                                    <Box >
-                                        <ImageField source="card_data.image_uris.small" className="mobileGridImage" />
-                                    </Box>
-                                    <Box pl={2}>
-                                        <Typography component={'span'} gutterBottom>
-                                            <TextField source="name" fontSize="1rem" />
-                                        </Typography>
-                                        <Typography component={'span'} gutterBottom display="flex" variant='body2' color="rgba(255, 255, 255, 0.5)">
-                                            <span style={{ marginRight: "10px" }}>Deck colors:</span> <DeckColors label="Deck colors" />
-                                        </Typography>
-                                        <Typography component={'span'} gutterBottom display="flex" variant='body2' color="rgba(255, 255, 255, 0.5)">
-                                            <span style={{ marginRight: "10px" }}>Arctype:</span> <TextField source="arctype" />
-                                        </Typography>
-                                        <Typography component={'span'} gutterBottom display="flex" variant='body2' color="rgba(255, 255, 255, 0.5  )">
-                                            <span style={{ marginRight: "10px" }}>Owner:</span> <ReferenceField source="owner" reference="player">
-                                                <TextField source="name" />
-                                            </ReferenceField>
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </RecordContextProvider>
-                        </Grid>
-                    </Link>
-                ))
-            ) : (
-                <>
-                    <p>No decks yet</p>
-                    <CreateButton label='Lag deck' resource='deck' />
-                </>
-            )}
-
-        </>
-    )
-}
-
-const PlayerInfo = ({ type }: PlayerInfoProps) => {
-    const record = useRecordContext();
-    if (!record) return null;
-
-    return (
-        type === 'name' ? (
-            <h2 className='mb-0'>{record.name}'s info</h2>
-        ) : type === 'deck' ? (
-            <h2 className='mb-0'>Total <ReferenceManyCount label="Nb comments" reference="deck" target="owner" sx={{ fontSize: "1.5rem" }} /> decks</h2>
-        ) : null
-    );
-};
 
 const formatDate = (inputDate: any) => {
     const date = new Date(inputDate);
@@ -330,22 +270,40 @@ const PlayerDecks = () => {
         }
     )
 
+    const sortedDecks = decks?.sort((a, b) => {
+        const aRetired = checkRetired(a) ? 1 : 0;
+        const bRetired = checkRetired(b) ? 1 : 0;
+        if (aRetired !== bRetired) {
+            return aRetired - bRetired;
+        } else {
+            return a.name.localeCompare(b.name);
+        }
+    });
+
     return (
-        decks?.map((deck) => (
-            <Grid item xs={12} md={6} lg={2} key={deck.id} mt={1}>
-                <Link to={`/deck/${deck.id}/show`} style={{ textDecoration: 'none', color: 'inherit' }} >
-                    <Box className="newDeckBox" display={'flex'} p={1.4}>
-                        <img src={deck.card_data.image_uris.small} style={{ width: "50px", height: "auto", borderRadius: "3px" }} />
-                        <Box ml={1.5} mt={0.5}>
-                            <Typography color={'white'}>
-                                {deck.name}
-                            </Typography>
-                            <Typography fontSize={12} fontWeight={300} sx={{ opacity: "50%" }}>
-                                {deck.card_data.name}
-                            </Typography>
+        sortedDecks?.map((record) => (
+            <Grid item xs={12} md={6} lg={2} key={record.id} mt={1}>
+                <Link to={`/deck/${record.id}/show`} style={{ textDecoration: 'none', color: 'inherit' }} >
+                    <RecordContextProvider key={record.id} value={record}>
+                        <Box className="newDeckBox" display={'flex'} p={1.4}>
+                            <img src={record.card_data.image_uris.small} style={{ width: "50px", height: "auto", borderRadius: "3px" }} />
+                            <Box ml={1.5} mt={0.5} width={'100%'}>
+                                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
+                                    <Typography color={checkRetired(record) ? '#999999' : 'white'}>
+                                        {record.name}
+                                    </Typography>
+                                    {checkRetired(record) ? (
+                                        <span className="retiredMark">Retired</span>
+                                    ) : null}
+                                </Box>
+                                <Typography fontSize={12} fontWeight={300} sx={{ opacity: "50%" }}>
+                                    {record.card_data.name}
+                                </Typography>
+                            </Box>
                         </Box>
-                    </Box>
+                    </RecordContextProvider>
                 </Link>
+
             </Grid >
         ))
     )

@@ -6,6 +6,7 @@ import { useMediaQuery, Theme, Card, Typography, Grid, FormControl, InputLabel, 
 import { Box } from '@mui/system';
 import TextField2 from '@mui/material/TextField';
 import useDebounce from '../Helpers/useDebounce';
+import { checkRetired } from '../Helpers/checkRetired';
 
 interface DeckStat {
     id: number;
@@ -75,7 +76,7 @@ const deckFilters = [
     <SelectInput source="colorIdentity" choices={colorChoices} alwaysOn />,
 ];
 
-const Test = () => {
+const MobileDeckList = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [tmpSearchQuery, setTmpSearchQuery] = useState('');
     const [filterColor, setFilterColor] = useState('');
@@ -91,11 +92,21 @@ const Test = () => {
         }
     );
 
-    const handleSearchChange = (event) => {
+    const sortedDecks = data?.sort((a, b) => {
+        const aRetired = checkRetired(a) ? 1 : 0;
+        const bRetired = checkRetired(b) ? 1 : 0;
+        if (aRetired !== bRetired) {
+            return aRetired - bRetired;
+        } else {
+            return a.name.localeCompare(b.name);
+        }
+    });
+
+    const handleSearchChange = (event: any) => {
         setTmpSearchQuery(event.target.value);
     };
 
-    const handleFilterColorChange = (event) => {
+    const handleFilterColorChange = (event: any) => {
         setFilterColor(event.target.value);
     };
 
@@ -157,22 +168,22 @@ const Test = () => {
                     </Select>
                 </FormControl>
             </Box>
-            {data?.map(record => (
+            {sortedDecks?.map(record => (
                 <Link to={`/deck/${record.id}/show`} style={{ textDecoration: 'none', color: 'inherit' }} key={record.id} sx={{ width: "100%" }} mb={1.4}>
                     <Grid>
                         <RecordContextProvider key={record.id} value={record}>
                             <Box display="flex" className="deckListBox">
-                                <Box>
-                                    <ImageField source="card_data.image_uris.small" className="mobileGridImage" />
+                                <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                                    <ImageField source="card_data.image_uris.small" className={`mobileGridImage ${checkRetired(record) ? 'retiredOverlay' : null}`} />
                                 </Box>
                                 <Box pl={2} display={'flex'} flexDirection={'column'} justifyContent={'center'} width={'100%'}>
-                                    <Box display={'flex'} justifyContent={'space-between'}>
-                                        <Typography component={'span'} gutterBottom color={'white'}>
+                                    <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={0.4}>
+                                        <Typography component={'span'} gutterBottom mb={0} color={checkRetired(record) ? '#999999' : 'white'}>
                                             <TextField source="name" fontSize="1rem" />
                                         </Typography>
-                                        {/* <Typography component={'span'} color={'#fda907'}>
-                                    <TotalGamesField type="percentage" deckId={record.id} />
-                                </Typography> */}
+                                        {checkRetired(record) ? (
+                                            <span className="retiredMark">Retired</span>
+                                        ) : null}
                                     </Box>
                                     <Typography component={'span'} gutterBottom display="flex" variant='body2' color="rgba(255, 255, 255, 0.5)">
                                         <span style={{ marginRight: "10px" }}>Deck colors:</span> <DeckColors label="Deck colors" />
@@ -181,7 +192,8 @@ const Test = () => {
                                         <span style={{ marginRight: "10px" }}>Archtype:</span> <TextField source="arctype" />
                                     </Typography>
                                     <Typography component={'span'} gutterBottom display="flex" variant='body2' color="rgba(255, 255, 255, 0.5)">
-                                        <span style={{ marginRight: "10px" }}>Owner:</span> <ReferenceField source="owner" reference="player">
+                                        <span style={{ marginRight: "10px" }}>Owner:</span>
+                                        <ReferenceField source="owner" reference="player">
                                             <TextField source="name" />
                                         </ReferenceField>
                                     </Typography>
@@ -214,13 +226,7 @@ export const DeckList = () => {
 
                 <Grid container pb={6}>
                     <CreateButton label="Create Deck" />
-                    {/* <MobileGrid /> */}
-                    <Test />
-                    {/* <List filters={deckFilters}>
-                        <Datagrid rowClick="show">
-                            <TextField source="name" />
-                        </Datagrid>
-                    </List> */}
+                    <MobileDeckList />
                 </Grid>
             </>
         ) : (

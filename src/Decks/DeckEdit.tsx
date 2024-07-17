@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Edit, SimpleForm, TextInput, required, SelectInput, ReferenceInput, useInput, useGetOne, NumberInput, Toolbar, SaveButton, useGetIdentity, useRecordContext } from 'react-admin';
+import { Edit, SimpleForm, TextInput, required, SelectInput, ReferenceInput, useInput, useGetOne, NumberInput, Toolbar, SaveButton, useGetIdentity, useRecordContext, RadioButtonGroupInput } from 'react-admin';
 import axios from 'axios';
 import { Autocomplete, TextField, ListItem, ListItemText, Grid, Card, CardMedia, Typography } from '@mui/material';
 import DeckColors from './DeckColors';
@@ -328,6 +328,10 @@ export const DeckEdit = () => {
                         </ReferenceInput>
                         <TextInput source="deckbox_link" fullWidth />
                         <CustomHiddenInput source="owner_name" value={ownerName} />
+                        <RadioButtonGroupInput source="retired" choices={[
+                            { id: 1, name: 'Yes' },
+                            { id: 0, name: 'No' },
+                        ]} />
                     </SimpleForm>
                 </Edit>
             </Grid>

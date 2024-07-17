@@ -6,6 +6,7 @@ import { Fragment, useEffect, useState, useMemo } from 'react';
 import ManaSymbols from '../Helpers/ManaSymbols';
 import { Typography, useMediaQuery, Theme, Box } from '@mui/material';
 import { countGamesAgainstDecks } from '../Helpers/utils';
+import { checkRetired } from '../Helpers/checkRetired';
 
 interface DeckInfoProps {
     type: 'name' | 'deck';
@@ -322,6 +323,21 @@ const IdentityChecker = () => {
     )
 }
 
+const RetiredText = () => {
+    const record = useRecordContext();
+    if (!record) return false;
+
+    if (record.retired) {
+        return (
+            <Typography className='retiredMark' sx={{ backgroundColor: '#13182e' }} textAlign={'center'} py={2} mb={2} fontSize={16}>
+                This deck is retired
+            </Typography>
+        )
+    }
+
+    return null;
+}
+
 export const DeckShow = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
 
@@ -332,6 +348,7 @@ export const DeckShow = () => {
                 {isSmall ? (
                     <Box className="deckShowBox" pb={4} mt={3}>
                         <Box px={1} pt={2}>
+                            <RetiredText />
                             <Typography mb={1} variant='h5'>
                                 <TextField source="name" variant='h5' /> - (<TextField source="owner_name" variant='h5' fontWeight={300} />)
                             </Typography>
