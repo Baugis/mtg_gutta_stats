@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { List, TextInput, SelectInput, TextField, DateField, ReferenceManyField, SingleFieldList, ChipField, ReferenceField, BooleanField, Datagrid, useGetList, Link, useGetOne, CreateButton } from 'react-admin';
 import { useRecordContext } from 'react-admin';
 import TextField2 from '@mui/material/TextField';
+import useDebounce from '../Helpers/useDebounce';
 
 const DecksWinner = (label: any) => {
     const record = useRecordContext();
@@ -85,8 +86,11 @@ const MatchHistory = () => {
 
     // State for filters and search
     const [searchQuery, setSearchQuery] = useState('');
+    const [tmpSearchQuery, setTmpSearchQuery] = useState('');
     const [filterType, setFilterType] = useState('');
     const [filterDate, setFilterDate] = useState('');
+
+    const debouncedSearchQuery = useDebounce(tmpSearchQuery, 300);
 
     const { data } = useGetList(
         'match',
@@ -146,7 +150,7 @@ const MatchHistory = () => {
     }
 
     const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
+        setTmpSearchQuery(event.target.value);
     };
 
     const handleFilterTypeChange = (event) => {
@@ -157,6 +161,10 @@ const MatchHistory = () => {
         setFilterDate(event.target.value);
     };
 
+    useEffect(() => {
+        setSearchQuery(debouncedSearchQuery);
+    }, [debouncedSearchQuery]);
+
     console.log("Data: ", data)
 
     return (
@@ -165,7 +173,7 @@ const MatchHistory = () => {
                 <TextField2
                     label="Search"
                     variant="outlined"
-                    value={searchQuery}
+                    value={tmpSearchQuery}
                     onChange={handleSearchChange}
                     fullWidth
                 />
