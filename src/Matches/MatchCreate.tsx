@@ -39,6 +39,7 @@ const MatchCreate = () => {
     const [deckCount, setDeckCount] = React.useState(0);
     const [winnerCount, setWinnerCount] = React.useState(0);
     const [loserCount, setLoserCount] = React.useState(0);
+    const [starterCount, setStarterCount] = React.useState(1);
 
     const [create] = useCreate();
     const redirect = useRedirect();
@@ -51,31 +52,37 @@ const MatchCreate = () => {
                 setDeckCount(2);
                 setWinnerCount(1);
                 setLoserCount(1);
+                setStarterCount(1);
                 break;
             case '3 man ffa':
                 setDeckCount(3);
                 setWinnerCount(1);
                 setLoserCount(2);
+                setStarterCount(1);
                 break;
             case '4 man ffa':
                 setDeckCount(4);
                 setWinnerCount(1);
                 setLoserCount(3);
+                setStarterCount(1);
                 break;
             case 'Two head giant':
                 setDeckCount(4);
                 setWinnerCount(2);
                 setLoserCount(2);
+                setStarterCount(2);
                 break;
             case 'Stjerne':
                 setDeckCount(5);
                 setWinnerCount(1);
                 setLoserCount(4);
+                setStarterCount(1);
                 break;
             default:
                 setDeckCount(0);
                 setWinnerCount(0);
                 setLoserCount(0);
+                setStarterCount(0);
         }
     };
 
@@ -137,7 +144,7 @@ const MatchCreate = () => {
 
         const payload = {
             ...data,
-            decks: formattedDecks
+            decks: formattedDecks,
         };
 
         create('match', { data: payload });
@@ -178,7 +185,6 @@ const MatchCreate = () => {
                         />
                         <DateInput source="date" validate={validateDate} defaultValue={new Date().toISOString().split('T')[0]} fullWidth className="dateInput" />
                         <TextInput source="notes" defaultValue="" multiline fullWidth />
-
                         {deckCount > 0 && (
                             <>
                                 {deckCount === 5 && (
@@ -240,6 +246,48 @@ const MatchCreate = () => {
                                             </ReferenceInput>
                                         ))}
                                     </Grid>
+                                    {starterCount === 2 ? (
+                                        <Grid xs={12} sm={6}>
+                                            <Typography fontSize={18} color={'white'} mb={1}>
+                                                Starters
+                                            </Typography>
+                                            {Array.from({ length: starterCount }, (_, index) => (
+                                                <ReferenceInput
+                                                    key={index}
+                                                    label={`Starter ${index + 1}`}
+                                                    source={`starter${index + 1}`}
+                                                    reference="deck"
+                                                    sort={{ field: 'name', order: 'ASC' }}
+                                                    perPage={200}
+                                                >
+                                                    <AutocompleteInput
+                                                        optionText={deckOptionText}
+                                                        inputText={deckInputText}
+                                                        sx={{ minWidth: "300px" }}
+                                                    />
+                                                </ReferenceInput>
+                                            ))}
+                                        </Grid>
+                                    ) : (
+                                        <Grid xs={12} sm={6}>
+                                            <Typography fontSize={18} color={'white'} mb={1}>
+                                                Starter
+                                            </Typography>
+                                            <ReferenceInput
+                                                label={`Starter 1`}
+                                                source={`starter1`}
+                                                reference="deck"
+                                                sort={{ field: 'name', order: 'ASC' }}
+                                                perPage={200}
+                                            >
+                                                <AutocompleteInput
+                                                    optionText={deckOptionText}
+                                                    inputText={deckInputText}
+                                                    sx={{ minWidth: "300px" }}
+                                                />
+                                            </ReferenceInput>
+                                        </Grid>
+                                    )}
                                 </Box>
                             </>
                         )}
