@@ -1,9 +1,10 @@
 import { useMediaQuery, Theme, Grid, Card, Box, Typography, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { List, TextInput, SelectInput, TextField, DateField, ReferenceManyField, SingleFieldList, ChipField, ReferenceField, BooleanField, Datagrid, useGetList, Link, useGetOne, CreateButton } from 'react-admin';
+import { List, TextInput, SelectInput, TextField, DateField, Datagrid, useGetList, Link, useGetOne, CreateButton, useGetIdentity, useRefresh } from 'react-admin';
 import { useRecordContext } from 'react-admin';
 import TextField2 from '@mui/material/TextField';
 import useDebounce from '../Helpers/useDebounce';
+import axios from 'axios';
 
 const DecksWinner = (label: any) => {
     const record = useRecordContext();
@@ -81,6 +82,140 @@ const formatDate = (inputDate: any) => {
     return `${formattedDay}. ${formattedMonth} ${year}`;
 };
 
+const DeckImage = (deckId: any) => {
+    const { data: deckImage } = useGetOne(
+        'deck',
+        { id: deckId.deckId }
+    )
+
+    const image = deckImage?.card_data?.image_uris?.art_crop;
+    return (
+        <div className="image-container">
+            <img className="cropped-image" src={image} />
+        </div>
+    )
+}
+
+const acceptMatch = async (matchId: number, match: any, refresh: any) => {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: 'https://www.magigutta.no/api',
+            data: {
+                action: 'matchAccept',
+                match: matchId,
+                data: {
+                    match: match
+                }
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        refresh()
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const denyMatch = async (matchId: number, refresh: any) => {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: 'https://www.magigutta.no/api',
+            data: {
+                action: 'matchDeny',
+                match: matchId
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        refresh()
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const ConfirmMatches = (identity: any) => {
+    const refresh = useRefresh();
+    const { data: matches } = useGetList(
+        'match'
+    )
+
+    let playerMatches: any[] = [];
+    matches?.forEach((match) => {
+        match.players.forEach((player: any) => {
+            /* console.log("Player: ", player) */
+            if (player.owner_id == identity?.identity?.id && match.confirmed == 0 && match.registered_by !== identity?.identity?.id) {
+                playerMatches.push(match)
+            }
+        })
+    })
+
+    if (playerMatches.length > 0) {
+        return (
+            <Box bgcolor={'#13182e'} mb={2.5} py={2} px={2}>
+                <Link to="match">
+                    <Typography color={'white'} fontSize={17} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span>Confirm {playerMatches.length > 1 ? 'Matches' : 'Match'}</span>
+                    </Typography>
+                    {playerMatches.map((match) => {
+                        let winner = false;
+                        match.players.map((player: any) => {
+                            if (player?.owner_id == identity?.identity?.id) {
+                                if (player.result == 'winner') {
+                                    winner = true;
+                                }
+                            }
+                        })
+
+                        return (
+                            <Box bgcolor={'rgba(255, 255, 255, 0.05)'} p={2} mt={2}>
+                                <Typography color={'white'} fontSize={12}>
+                                    {formatDate(match.date_played)}
+                                </Typography>
+
+                                <Typography mt={1} color={'white'}>
+                                    You {winner ? 'won' : 'lost'} in {match.type} with {match.players.map((player: any) => {
+                                        if (player.owner_id == identity?.identity.id) {
+                                            return player.name
+                                        }
+                                    })}
+                                </Typography>
+                                <Box display={'flex'} gap={1}>
+                                    {match.players.map((player: any) => {
+                                        if (player?.owner_id != identity?.identity?.id) {
+                                            return (
+                                                <Box color={'white'} className={`matchHistoryDeckImage ${player.result == 'winner' ? 'winnerBorder' : 'loserBorder'}`}>
+                                                    <DeckImage deckId={player.deck_id} />
+                                                </Box>
+                                            )
+                                        } else {
+                                            return (
+                                                <Box color={'white'} className={`matchHistoryDeckImage ${player.result == 'winner' ? 'winnerBorder' : 'loserBorder'}`}>
+                                                    <DeckImage deckId={player.deck_id} />
+                                                </Box>
+                                            )
+                                        }
+                                    })}
+                                </Box>
+                                <Box mt={2}>
+                                    <button className="matchResponseButton" style={{ backgroundColor: '#50C878', color: 'white', textTransform: 'none', marginRight: '5px' }} onClick={() => acceptMatch(match.id, match, refresh)}>Accept</button>
+                                    <button className="matchResponseButton" style={{ backgroundColor: '#FF5733', color: 'white', textTransform: 'none' }} onClick={() => denyMatch(match.id, refresh)}>Deny</button>
+                                </Box>
+                            </Box>
+                        )
+                    })}
+                </Link>
+            </Box>
+        )
+    }
+
+    return null;
+}
+
 const MatchHistory = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
 
@@ -100,7 +235,8 @@ const MatchHistory = () => {
             filter: {
                 q: searchQuery,
                 type: filterType ? filterType : null,
-                date_played: filterDate ? filterDate : null
+                date_played: filterDate ? filterDate : null,
+                confirmed: 1
             }
         },
     );
@@ -117,20 +253,6 @@ const MatchHistory = () => {
             }
         })
     })
-
-    const DeckImage = (deckId: any) => {
-        const { data: deckImage } = useGetOne(
-            'deck',
-            { id: deckId.deckId }
-        )
-
-        const image = deckImage?.card_data?.image_uris?.art_crop;
-        return (
-            <div className="image-container">
-                <img className="cropped-image" src={image} />
-            </div>
-        )
-    }
 
     const MatchField = (type: any) => {
         switch (type.type) {
@@ -164,8 +286,6 @@ const MatchHistory = () => {
     useEffect(() => {
         setSearchQuery(debouncedSearchQuery);
     }, [debouncedSearchQuery]);
-
-    console.log("Data: ", data)
 
     return (
         <>
@@ -267,6 +387,7 @@ const MatchHistory = () => {
 
 export const MatchList = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
+    const { data: identity, isLoading, error } = useGetIdentity();
 
     return (
         isSmall ? (
@@ -281,6 +402,8 @@ export const MatchList = () => {
                         </Grid >
                     </Card >
                 </Grid>
+
+                <ConfirmMatches identity={identity} />
 
                 <Box px={1}>
                     <CreateButton label="Create Match" />

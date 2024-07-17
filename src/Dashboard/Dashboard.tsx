@@ -1,5 +1,5 @@
 import { Card, Grid, useMediaQuery, Theme, Box, Typography, IconButton } from "@mui/material";
-import { Count, Link, useGetList, useGetMany, useGetIdentity } from "react-admin";
+import { Count, Link, useGetList, useGetMany, useGetIdentity, useGetOne } from "react-admin";
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import { useMemo } from 'react';
 
@@ -72,7 +72,7 @@ const NewMatches = () => {
 
     return (
         matches?.map((match) => (
-            match.players.map((player) => {
+            match.players.map((player: any) => {
                 if (player.result === 'winner') {
                     const playerData = players?.find(p => p.id === player.owner_id);
                     const deckData = decks?.find(d => d.id === player.deck_id);
@@ -99,6 +99,39 @@ const NewMatches = () => {
     );
 };
 
+const ConfirmMatches = (identity: any) => {
+    /* console.log("Tewster123: ", identity.identity.id) */
+
+    const { data: matches } = useGetList(
+        'match'
+    )
+
+    let playerMatches: any[] = [];
+    matches?.forEach((match) => {
+        match.players.forEach((player: any) => {
+            /* console.log("Player: ", player) */
+            if (player.owner_id == identity.identity.id && match.confirmed == 0) {
+                playerMatches.push(match)
+            }
+        })
+    })
+
+    if (playerMatches.length > 0) {
+        return (
+            <Box bgcolor={'#13182e'} mb={2} py={2} px={2}>
+                <Link to="match">
+                    <Typography color={'white'} fontSize={17} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                        <span>You have an unconfirmed match</span>
+                        <img src="public\images\arrow-right-solid.svg" style={{ height: '20px' }} />
+                    </Typography>
+                </Link>
+            </Box>
+        )
+    }
+
+    return null;
+}
+
 export const Dashboard = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
     const { data: identity, isLoading, error } = useGetIdentity();
@@ -116,6 +149,7 @@ export const Dashboard = () => {
     return (
         isSmall ? (
             <Grid item xs={12} mt={4} pb={6}>
+                <ConfirmMatches identity={identity} />
                 <Card className="dashboardCard">
                     <Grid container>
                         <Grid item xs={12} lg={6}>
@@ -128,7 +162,7 @@ export const Dashboard = () => {
                 <Grid container mt={2} justifyContent={'center'} rowGap={2}>
                     <Grid item xs={6}>
                         <Grid container display="flex">
-                            <Box bgcolor="#9efa56" className="dashboardMiniBox" p={1.3} >
+                            <Box bgcolor="#9efa56" className="dashboardMiniBox" p={2} >
                                 <img src="images\users-solid (1).svg" />
                             </Box>
                             <Box ml={1.3} display={'flex'} flexDirection={'column'} justifyContent={'center'}>
@@ -143,7 +177,7 @@ export const Dashboard = () => {
                     </Grid>
                     <Grid item xs={6}>
                         <Grid container display="flex">
-                            <Box bgcolor="#fda907" className="dashboardMiniBox" p={1.3} >
+                            <Box bgcolor="#fda907" className="dashboardMiniBox" p={2} >
                                 <img src="images\cards-blank-solid.svg" />
                             </Box>
                             <Box ml={1.3} display={'flex'} flexDirection={'column'} justifyContent={'center'}>
@@ -158,7 +192,7 @@ export const Dashboard = () => {
                     </Grid>
                     <Grid item xs={6}>
                         <Grid container display="flex">
-                            <Box bgcolor="#5b58f6" className="dashboardMiniBox" p={1.6} >
+                            <Box bgcolor="#5b58f6" className="dashboardMiniBox" p={2} >
                                 <img src="images\swords-solid.svg" />
                             </Box>
                             <Box ml={1.3} display={'flex'} flexDirection={'column'} justifyContent={'center'}>

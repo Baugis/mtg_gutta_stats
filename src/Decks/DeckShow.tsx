@@ -51,6 +51,7 @@ const MatchHistory = () => {
         {
             pagination: { page: 1, perPage: 100 },
             sort: { field: 'id', order: 'DESC' },
+            filter: { confirmed: 1 }
         },
     );
 
@@ -163,6 +164,7 @@ const Rivals = () => {
         {
             pagination: { page: 1, perPage: 1000 },
             sort: { field: 'id', order: 'DESC' },
+            filter: { confirmed: 1 }
         },
     );
     const { data: decks, isLoading: decksLoading, error: decksError } = useGetList(

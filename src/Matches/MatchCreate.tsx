@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Create, SimpleForm, AutocompleteInput, DateInput, required, SelectInput, ReferenceInput, useGetOne, useGetList, TextInput, useCreate, useRedirect } from 'react-admin';
+import { Create, SimpleForm, AutocompleteInput, DateInput, required, SelectInput, ReferenceInput, useGetOne, useGetList, TextInput, useCreate, useRedirect, useGetIdentity } from 'react-admin';
 import { Card, Grid, Typography, Box, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { useFormContext, useController } from 'react-hook-form';
 
 const validateType = required('Type er påkrevd');
 const validateDate = required('Dato er påkrevd');
@@ -12,6 +13,26 @@ const DeckOptionText = ({ record }: { record: any }) => {
     if (error) return 'Error';
 
     return `${record.commander} (${owner ? owner.name : 'Unknown'})`;
+};
+
+const CustomHiddenInput = ({ source }: { source: string }) => {
+    const { data: identity, isLoading, error } = useGetIdentity();
+    const { control } = useFormContext();
+    const { field } = useController({ name: source, control });
+
+    React.useEffect(() => {
+        if (!isLoading && identity && identity.id !== field.value) {
+            field.onChange(identity.id);
+        }
+    }, [identity, isLoading, field]);
+
+    if (isLoading || error) {
+        return null;
+    }
+
+    return (
+        <input {...field} hidden />
+    );
 };
 
 const MatchCreate = () => {
@@ -141,6 +162,7 @@ const MatchCreate = () => {
             <Grid item xs={12}>
                 <Create className="createBox">
                     <SimpleForm onSubmit={save}>
+                        <CustomHiddenInput source="registered_by" />
                         <SelectInput
                             source="type"
                             choices={[

@@ -158,6 +158,7 @@ const Rivals = () => {
         {
             pagination: { page: 1, perPage: 1000 },
             sort: { field: 'id', order: 'DESC' },
+            filter: { confirmed: 1 }
         },
     );
     const { data: players, isLoading: playersLoading, error: playersError } = useGetList(

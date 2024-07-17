@@ -6,7 +6,6 @@ import DeckColors from './DeckColors';
 import { useFormContext, useController } from 'react-hook-form';
 import Box from '@mui/material/Box';
 
-
 interface CardData {
     object: string;
     id: string;
