@@ -136,7 +136,7 @@ export const PlayerList = () => {
                         <Grid container>
                             <Grid item xs={12} lg={6}>
                                 <h1>Players</h1>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras rhoncus tempus nunc faucibus auctor. </p>
+                                <p>See list of all players</p>
                             </Grid >
                         </Grid >
                     </Card >

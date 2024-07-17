@@ -154,7 +154,7 @@ export const Dashboard = () => {
                     <Grid container>
                         <Grid item xs={12} lg={6}>
                             <h1>Hello, {identity?.fullName}</h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras rhoncus tempus nunc faucibus auctor. Phasellus non enim sed ante venenatis maximus et vitae mi. Curabitur dui ante, blandit at egestas vitae, lacinia at lectus.</p>
+                            <p>Set out on a new kind of adventure filled with tiny—but mighty—woodland creatures. The animal folk on Bloomburrow must stand together to defend against the Calamity Beasts—massive elemental predators that threaten the land and its tiny denizens.</p>
                         </Grid >
                     </Grid >
                 </Card >

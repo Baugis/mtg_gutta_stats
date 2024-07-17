@@ -218,7 +218,7 @@ export const DeckList = () => {
                         <Grid container>
                             <Grid item xs={12} lg={6}>
                                 <h1>Decks</h1>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras rhoncus tempus nunc faucibus auctor.</p>
+                                <p>Se and filter the list of all registered decks</p>
                             </Grid>
                         </Grid>
                     </Card>
