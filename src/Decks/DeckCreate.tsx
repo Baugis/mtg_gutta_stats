@@ -248,9 +248,6 @@ const DeckCreate = () => {
         setOwnerName(player?.name);
     }, [playerId])
 
-    console.log("Lolejfes: ", ownerName)
-
-
     return (
         <Grid container>
             <Grid item xs={12} mt={4} pb={3}>
@@ -275,6 +272,7 @@ const DeckCreate = () => {
                         </ReferenceInput>
                         <TextInput source="deckbox_link" fullWidth />
                         <CustomHiddenInput source="owner_name" value={ownerName} />
+                        <CustomHiddenInput source="colors" value={JSON.stringify(cardData?.color_identity)} />
                     </SimpleForm>
                 </Create>
             </Grid>

@@ -1,9 +1,11 @@
 import { Datagrid, List, TextInput, ReferenceField, ReferenceInput, TextField, SelectInput, UrlField, useRecordContext, useGetList, RaRecord, useSortState, RecordContextProvider, ImageField, Link, CreateButton } from 'react-admin';
 import DeckColors from './DeckColors';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { calculateTotalGames, calculateTotalLosses, calculateTotalWinPercentage, calculateTotalWins, colorCombinations } from '../Helpers/utils';
-import { useMediaQuery, Theme, Card, Typography, Grid } from '@mui/material';
+import { useMediaQuery, Theme, Card, Typography, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Box } from '@mui/system';
+import TextField2 from '@mui/material/TextField';
+import useDebounce from '../Helpers/useDebounce';
 
 interface DeckStat {
     id: number;
@@ -73,20 +75,88 @@ const deckFilters = [
     <SelectInput source="colorIdentity" choices={colorChoices} alwaysOn />,
 ];
 
-const MobileGrid = () => {
+const Test = () => {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [tmpSearchQuery, setTmpSearchQuery] = useState('');
+    const [filterColor, setFilterColor] = useState('');
+
+    const debouncedSearchQuery = useDebounce(tmpSearchQuery, 300);
+
     const { data, isLoading, error } = useGetList(
         'deck',
         {
-            pagination: { page: 1, perPage: 1000 },
-            sort: { field: 'name', order: 'ASC' }
+            pagination: { page: 1, perPage: 100 },
+            sort: { field: 'name', order: 'ASC' },
+            filter: { q: searchQuery ? searchQuery : null, colors: filterColor ? filterColor : null }
         }
     );
 
-    if (isLoading) return <span>Loading...</span>;
-    if (error) return <span>Error loading decks</span>;
+    const handleSearchChange = (event) => {
+        setTmpSearchQuery(event.target.value);
+    };
+
+    const handleFilterColorChange = (event) => {
+        setFilterColor(event.target.value);
+    };
+
+    useEffect(() => {
+        setSearchQuery(debouncedSearchQuery);
+    }, [debouncedSearchQuery]);
 
     return (
         <>
+            <Box mb={2} className="matchHistoryBox" sx={{ width: "100%" }}>
+                <TextField2
+                    label="Search"
+                    variant="outlined"
+                    value={tmpSearchQuery}
+                    onChange={handleSearchChange}
+                    fullWidth
+                />
+                <FormControl fullWidth variant="outlined" margin="normal">
+                    <InputLabel>Colors</InputLabel>
+                    <Select
+                        value={filterColor}
+                        onChange={handleFilterColorChange}
+                        label="Type"
+                        className="colorsSelect"
+                    >
+                        <MenuItem value="" className="colorsSelectItem"><div>All</div></MenuItem>
+                        <MenuItem value='["B"]' className="colorsSelectItem">Black<div className="mana-b"></div></MenuItem>
+                        <MenuItem value='["G"]' className="colorsSelectItem">Green<div className="mana-g"></div></MenuItem>
+                        <MenuItem value='["R"]' className="colorsSelectItem">Red<div className="mana-r"></div></MenuItem>
+                        <MenuItem value='["U"]' className="colorsSelectItem">Blue<div className="mana-u"></div></MenuItem>
+                        <MenuItem value='["W"]' className="colorsSelectItem">White<div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["U","W"]' className="colorsSelectItem">Azorius<div className="mana-u"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["R","W"]' className="colorsSelectItem">Boros<div className="mana-r"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","U"]' className="colorsSelectItem">Dimir<div className="mana-b"></div><div className="mana-u"></div></MenuItem>
+                        <MenuItem value='["B","G"]' className="colorsSelectItem">Golgari<div className="mana-b"></div><div className="mana-g"></div></MenuItem>
+                        <MenuItem value='["G","R"]' className="colorsSelectItem">Gruul<div className="mana-g"></div><div className="mana-r"></div></MenuItem>
+                        <MenuItem value='["R","U"]' className="colorsSelectItem">Izzet<div className="mana-r"></div><div className="mana-u"></div></MenuItem>
+                        <MenuItem value='["B","W"]' className="colorsSelectItem">Orzhov<div className="mana-b"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","R"]' className="colorsSelectItem">Rakdos<div className="mana-b"></div><div className="mana-r"></div></MenuItem>
+                        <MenuItem value='["G","W"]' className="colorsSelectItem">Selesnya<div className="mana-g"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["G","U"]' className="colorsSelectItem">Simic<div className="mana-g"></div><div className="mana-u"></div></MenuItem>
+                        <MenuItem value='["B","G","W"]' className="colorsSelectItem">Abzan<div className="mana-b"></div><div className="mana-g"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["G","U","W"]' className="colorsSelectItem">Bant<div className="mana-g"></div><div className="mana-u"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","U","W"]' className="colorsSelectItem">Esper<div className="mana-b"></div><div className="mana-u"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","R","U"]' className="colorsSelectItem">Grixis<div className="mana-b"></div><div className="mana-r"></div><div className="mana-u"></div></MenuItem>
+                        <MenuItem value='["R","U","W"]' className="colorsSelectItem">Jeskai<div className="mana-r"></div><div className="mana-u"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","G","R"]' className="colorsSelectItem">Jund<div className="mana-b"></div><div className="mana-g"></div><div className="mana-r"></div></MenuItem>
+                        <MenuItem value='["B","R","W"]' className="colorsSelectItem">Mardu<div className="mana-b"></div><div className="mana-r"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["G","R","W"]' className="colorsSelectItem">Naya<div className="mana-g"></div><div className="mana-r"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","G","U"]' className="colorsSelectItem">Sultai<div className="mana-b"></div><div className="mana-g"></div><div className="mana-u"></div></MenuItem>
+                        <MenuItem value='["G","R","U"]' className="colorsSelectItem">Temur<div className="mana-g"></div><div className="mana-r"></div><div className="mana-u"></div></MenuItem>
+                        <MenuItem value='["B","G","R","U"]' className="colorsSelectItem">Glint<div className="mana-b"></div><div className="mana-g"></div><div className="mana-r"></div><div className="mana-u"></div></MenuItem>
+                        <MenuItem value='["B","G","R","W"]' className="colorsSelectItem">Dune<div className="mana-b"></div><div className="mana-g"></div><div className="mana-r"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["G","R","U","W"]' className="colorsSelectItem">Ink<div className="mana-g"></div><div className="mana-r"></div><div className="mana-u"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","G","U","W"]' className="colorsSelectItem">Witch<div className="mana-b"></div><div className="mana-g"></div><div className="mana-u"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","R","U","W"]' className="colorsSelectItem">Yore<div className="mana-b"></div><div className="mana-r"></div><div className="mana-u"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='["B","G","R","U","W"]' className="colorsSelectItem">Rainbow<div className="mana-b"></div><div className="mana-g"></div><div className="mana-r"></div><div className="mana-u"></div><div className="mana-w"></div></MenuItem>
+                        <MenuItem value='[]' className="colorsSelectItem">Colorless<div className="mana-colorless"></div></MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
             {data?.map(record => (
                 <Link to={`/deck/${record.id}/show`} style={{ textDecoration: 'none', color: 'inherit' }} key={record.id} sx={{ width: "100%" }} mb={1.4}>
                     <Grid>
@@ -101,8 +171,8 @@ const MobileGrid = () => {
                                             <TextField source="name" fontSize="1rem" />
                                         </Typography>
                                         {/* <Typography component={'span'} color={'#fda907'}>
-                                            <TotalGamesField type="percentage" deckId={record.id} />
-                                        </Typography> */}
+                                    <TotalGamesField type="percentage" deckId={record.id} />
+                                </Typography> */}
                                     </Box>
                                     <Typography component={'span'} gutterBottom display="flex" variant='body2' color="rgba(255, 255, 255, 0.5)">
                                         <span style={{ marginRight: "10px" }}>Deck colors:</span> <DeckColors label="Deck colors" />
@@ -122,7 +192,7 @@ const MobileGrid = () => {
                 </Link>
             ))}
         </>
-    );
+    )
 }
 
 export const DeckList = () => {
@@ -144,7 +214,13 @@ export const DeckList = () => {
 
                 <Grid container pb={6}>
                     <CreateButton label="Create Deck" />
-                    <MobileGrid />
+                    {/* <MobileGrid /> */}
+                    <Test />
+                    {/* <List filters={deckFilters}>
+                        <Datagrid rowClick="show">
+                            <TextField source="name" />
+                        </Datagrid>
+                    </List> */}
                 </Grid>
             </>
         ) : (
