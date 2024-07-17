@@ -83,18 +83,35 @@ const formatDate = (inputDate: any) => {
 };
 
 const DeckImage = (deckId: any) => {
-    const { data: deckImage } = useGetOne(
-        'deck',
-        { id: deckId.deckId }
-    )
+    // Check if the data is already in localStorage
+    const cachedDeckImage = localStorage.getItem(`deckImage_${deckId.deckId}`);
+    const [image, setImage] = React.useState(cachedDeckImage ? JSON.parse(cachedDeckImage) : null);
 
-    const image = deckImage?.card_data?.image_uris?.art_crop;
+    // Fetch the data if it's not in localStorage
+    const { data: deckImage, loading } = useGetOne(
+        'deck',
+        { id: deckId.deckId },
+        {
+            enabled: !cachedDeckImage, // Disable fetching if we have cached data
+        }
+    );
+
+    React.useEffect(() => {
+        if (deckImage && !cachedDeckImage) {
+            // Cache the data in localStorage
+            localStorage.setItem(`deckImage_${deckId.deckId}`, JSON.stringify(deckImage?.card_data?.image_uris?.art_crop));
+            setImage(deckImage?.card_data?.image_uris?.art_crop);
+        }
+    }, [deckImage, cachedDeckImage, deckId.deckId]);
+
+    if (loading) return <div>Loading...</div>;
+
     return (
         <div className="image-container">
             <img className="cropped-image" src={image} />
         </div>
-    )
-}
+    );
+};
 
 const acceptMatch = async (matchId: number, match: any, refresh: any) => {
     try {
