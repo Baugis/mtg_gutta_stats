@@ -49,55 +49,58 @@ const LoginScreen = ({ }) => {
 
     return (
         <form onSubmit={handleSubmit} style={{ width: "100%" }} className="loginForm">
-            <Box p={5} mt={20}>
-                <Typography fontSize={30} fontWeight={600} py={2} textAlign={'center'} color={'white'}>
-                    MagiGutta
-                </Typography>
-                <Grid container rowSpacing={2} mt={3}>
-                    <Grid xs={12} mb={2}>
-                        <TextField
-                            id="outlined-basic"
-                            label="Username"
-                            variant="outlined"
-                            onChange={e => setUsername(e.target.value)}
-                            fullWidth
-                            className="pageInput"
-                            placeholder='Username'
-                        />
-                    </Grid>
+            <Grid container justifyContent={'center'}>
+                <Grid item xs={12} md={6} lg={3}>
+                    <Box p={5} mt={20}>
+                        <Typography fontSize={30} fontWeight={600} py={2} textAlign={'center'} color={'white'}>
+                            MagiGutta
+                        </Typography>
+                        <Grid container rowSpacing={2} mt={3}>
+                            <Grid xs={12} mb={2}>
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Username"
+                                    variant="outlined"
+                                    onChange={e => setUsername(e.target.value)}
+                                    fullWidth
+                                    className="pageInput"
+                                    placeholder='Username'
+                                />
+                            </Grid>
 
-                    <Grid xs={12}>
-                        <TextField
-                            label='Password'
-                            variant="outlined"
-                            type={showPassword ? "text" : "password"}
-                            onChange={e => setPassword(e.target.value)}
-                            fullWidth
-                            autoComplete="current-password"
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                        >
-                                            {showPassword ? <VisibilityOutlinedIcon /> : <VisibilityOffOutlinedIcon />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                )
-                            }}
-                        />
-                    </Grid>
+                            <Grid xs={12}>
+                                <TextField
+                                    label='Password'
+                                    variant="outlined"
+                                    type={showPassword ? "text" : "password"}
+                                    onChange={e => setPassword(e.target.value)}
+                                    fullWidth
+                                    autoComplete="current-password"
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                >
+                                                    {showPassword ? <VisibilityOutlinedIcon /> : <VisibilityOffOutlinedIcon />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                />
+                            </Grid>
 
-                    <Grid xs={12} mt={3} display={'flex'} justifyContent={'center'}>
-                        <Button type="submit" variant="contained">
-                            Login
-                        </Button>
-                    </Grid>
+                            <Grid xs={12} mt={3} display={'flex'} justifyContent={'center'}>
+                                <Button type="submit" variant="contained">
+                                    Login
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </Grid>
-            </Box>
-
+            </Grid>
         </form>
     );
 }
