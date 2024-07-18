@@ -252,40 +252,60 @@ const Rivals = () => {
                 </Box>
             ))
         ) : (
-            <div>
-                <Typography variant='h5' fontWeight={400} mb={2}>
-                    Rivals
-                </Typography >
-                {gameCounts.map(count => (
-                    <Box key={count.opponentId} mb={2}>
-                        <Typography fontSize="1.1rem">
-                            {count.opponentName}
-                        </Typography>
-                        <Grid container>
-                            <Grid xs={6}>
-                                <Typography fontSize="0.9rem" >
-                                    Games: <span style={{ fontWeight: 400 }}>{count.gamesPlayed}</span>
-                                </Typography>
-                            </Grid>
-                            <Grid xs={6}>
-                                <Typography fontSize="0.9rem">
-                                    Wins: <span style={{ fontWeight: 400 }}>{count.wins}</span>
-                                </Typography>
-                            </Grid>
-                            <Grid xs={6}>
-                                <Typography fontSize="0.9rem">
-                                    Win rate: <span style={{ fontWeight: 400 }}>{count.winRate.toFixed(0)}%</span>
-                                </Typography>
-                            </Grid>
-                            <Grid xs={6}>
-                                <Typography fontSize="0.9rem">
-                                    Losses: <span style={{ fontWeight: 400 }}>{count.losses}</span>
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                ))}
-            </div >
+            gameCounts.map(item => (
+                <Box key={item.opponentId} mb={2} className="rivalBox">
+                    <Link to={`/deck/${item.opponentId}/show`}>
+                        <Box display={'flex'} alignItems={'center'}>
+                            <OpponentImage deckId={item.opponentId} />
+                            <Typography ml={1} color={'white'}>
+                                {item.opponentName}
+                            </Typography>
+                        </Box>
+                        <Box display={'flex'} mt={1} mx={1}>
+                            <Box flex={1}>
+                                <Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
+                                    <Typography fontSize={18} color={'#fda907'}>
+                                        {item.gamesPlayed}
+                                    </Typography>
+                                    <Typography variant="body2" color={'#5d6177'}>
+                                        Games
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box flex={1}>
+                                <Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
+                                    <Typography fontSize={18} color={'#fda907'}>
+                                        {item.wins}
+                                    </Typography>
+                                    <Typography variant="body2" color={'#5d6177'}>
+                                        Wins
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box flex={1}>
+                                <Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
+                                    <Typography fontSize={18} color={'#fda907'}>
+                                        {item.losses}
+                                    </Typography>
+                                    <Typography variant="body2" color={'#5d6177'}>
+                                        Losses
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            {/* <Box flex={1}>
+                                <Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
+                                    <Typography fontSize={18} color={'#fda907'}>
+                                        {item.winRate.toFixed(0)}%
+                                    </Typography>
+                                    <Typography variant="body2" color={'#5d6177'}>
+                                        Win rate
+                                    </Typography>
+                                </Box>
+                            </Box> */}
+                        </Box>
+                    </Link>
+                </Box>
+            ))
         )
     );
 };
@@ -397,84 +417,60 @@ export const DeckShow = () => {
                         </Box>
                     </Box>
                 ) : (
-                    <Grid container p={3} columnSpacing={3} rowSpacing={3}>
-                        <Grid xs={12}>
-                            <DeckInfo type="name" />
-                        </Grid>
-                        <Grid xs={12} lg={8}>
-                            <Grid container rowGap={3}>
-                                <Grid xs={12} width="100%">
-                                    <Card className="p-4">
-                                        <Grid display="flex" flexWrap="nowrap" container width="70%" alignItems="center">
-                                            <div>
-                                                <ImageField source="card_data.image_uris.small" className="deckCommanderImage" />
-                                            </div>
-                                            <div className="mb-5 mx-5">
-                                                <Typography>
-                                                    <TextField source="commander" variant='h5' />
-                                                </Typography>
-                                                <Typography>
-                                                    <TextField source="card_data.type_line" variant='h6' />
-                                                </Typography>
-                                                <Typography variant='body1'>
-                                                    <TextField source="card_data.oracle_text" />
-                                                </Typography>
-                                                <Typography variant='body1' fontStyle="italic">
-                                                    <TextField source="card_data.flavor_text" />
-                                                </Typography>
-                                                <Typography variant='h6'>
-                                                    <TextField source="card_data.power" variant='h6' />/<TextField source="card_data.toughness" variant='h6' />
-                                                </Typography>
-                                                <Typography mt={3}>
-                                                    <UrlField source="deckbox_link" target='_blank' />
-                                                </Typography>
-                                            </div>
-                                        </Grid>
-                                    </Card>
-                                </Grid>
-
-                                <Grid xs={12} width="100%">
-                                    <Card className="p-4">
-                                        <h2>Deck stats</h2>
-                                        <TabbedShowLayout>
-                                            <TabbedShowLayout.Tab label="Overall" sx={{ flex: 1 }}>
-                                                <p>Her kommer overall stats</p>
-                                            </TabbedShowLayout.Tab>
-                                            <TabbedShowLayout.Tab label="1v1" sx={{ flex: 1 }}>
-                                                <p>Her kommer 1v1 stats</p>
-                                            </TabbedShowLayout.Tab>
-                                            <TabbedShowLayout.Tab label="3 man ffa" sx={{ flex: 1 }}>
-                                                <p>Her kommer 3 man ffa stats</p>
-                                            </TabbedShowLayout.Tab>
-                                            <TabbedShowLayout.Tab label="4 man ffa" sx={{ flex: 1 }}>
-                                                <p>Her kommer 4 man ffa stats</p>
-                                            </TabbedShowLayout.Tab>
-                                            <TabbedShowLayout.Tab label="Two headed giant" sx={{ flex: 1 }}>
-                                                <p>Her kommer two headed giant stats</p>
-                                            </TabbedShowLayout.Tab>
-                                            <TabbedShowLayout.Tab label="Star format" sx={{ flex: 1 }}>
-                                                <p>Her kommer stjerne stats</p>
-                                            </TabbedShowLayout.Tab>
-                                        </TabbedShowLayout>
-                                    </Card>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-
-                        <Grid xs={4}>
-                            <Card className="p-4">
-                                <h2 className=''>Match history</h2>
+                    <Box className="deckShowBox" pb={4} mt={5} mx={4}>
+                        <Box display={'flex'} alignItems={'center'}>
+                            <Box px={3} pt={2} flex={5}>
+                                <RetiredText />
+                                <Typography mb={1} variant='h5'>
+                                    <TextField source="name" variant='h5' /> - (<TextField source="owner_name" variant='h5' fontWeight={300} />)
+                                </Typography>
+                                <ImageField source='card_data.image_uris.art_crop' className="deckShowDesktop" />
+                            </Box>
+                            <Box px={3} mt={2} mr={40}>
+                                <Typography>
+                                    <TextField source="card_data.name" variant='h6' fontWeight={400} />
+                                </Typography>
+                                <Typography>
+                                    <TextField source="card_data.type_line" fontSize={16} fontWeight={400} sx={{ opacity: "80%" }} />
+                                </Typography>
+                                <Typography variant='body1'>
+                                    <TextField source="card_data.oracle_text" fontWeight={300} sx={{ opacity: "60%" }} />
+                                </Typography>
+                                <Typography variant='body1' fontStyle="italic">
+                                    <TextField source="card_data.flavor_text" sx={{ opacity: "60%" }} />
+                                </Typography>
+                                <Typography variant='h6' mb={2} >
+                                    <TextField source="card_data.power" variant='h6' />/<TextField source="card_data.toughness" variant='h6' />
+                                </Typography>
+                                <span className="newDeckType">
+                                    <TextField source="arctype" />
+                                </span>
+                                <DeckBoxLink />
+                            </Box>
+                        </Box>
+                        <Box display={'flex'} pt={3} px={3} columnGap={5}>
+                            <Box flex={6}>
+                                <Box display={'flex'} alignItems={'center'} mb={2}>
+                                    <img src="images\swords-solid.svg" style={{ height: "23px" }} />
+                                    <Typography fontSize={17} color={'white'} ml={1}>
+                                        Match history
+                                    </Typography>
+                                </Box>
                                 <MatchHistory />
-                            </Card>
-
-                        </Grid>
-
-                    </Grid>
-                )
-                }
-
+                            </Box>
+                            <Box flex={6}>
+                                <Box display={'flex'} alignItems={'center'} mb={2}>
+                                    <img src="images\cards-blank-solid.svg" style={{ height: "23px" }} />
+                                    <Typography fontSize={17} color={'white'} ml={1}>
+                                        Rival decks
+                                    </Typography>
+                                </Box>
+                                <Rivals />
+                            </Box>
+                        </Box>
+                    </Box>
+                )}
             </Form >
-
         </Show >
     );
 };

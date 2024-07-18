@@ -282,31 +282,63 @@ const PlayerDecks = () => {
     });
 
     return (
-        sortedDecks?.map((record) => (
-            <Grid item xs={12} md={6} lg={2} key={record.id} mt={1}>
-                <Link to={`/deck/${record.id}/show`} style={{ textDecoration: 'none', color: 'inherit' }} >
-                    <RecordContextProvider key={record.id} value={record}>
-                        <Box className="newDeckBox" display={'flex'} p={1.4}>
-                            <img src={record.card_data.image_uris.small} style={{ width: "50px", height: "auto", borderRadius: "3px" }} />
-                            <Box ml={1.5} mt={0.5} width={'100%'}>
-                                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
-                                    <Typography color={checkRetired(record) ? '#999999' : 'white'}>
-                                        {record.name}
+        isSmall ? (
+            sortedDecks?.map((record) => (
+                <Grid item xs={12} md={6} key={record.id} mt={1}>
+                    <Link to={`/deck/${record.id}/show`} style={{ textDecoration: 'none', color: 'inherit' }} >
+                        <RecordContextProvider key={record.id} value={record}>
+                            <Box className="newDeckBox" display={'flex'} p={1.4}>
+                                <img src={record.card_data.image_uris.small} style={{ width: "50px", height: "auto", borderRadius: "3px" }} />
+                                <Box ml={1.5} mt={0.5} width={'100%'}>
+                                    <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
+                                        <Typography color={checkRetired(record) ? '#999999' : 'white'}>
+                                            {record.name}
+                                        </Typography>
+                                        {checkRetired(record) ? (
+                                            <span className="retiredMark">Retired</span>
+                                        ) : null}
+                                    </Box>
+                                    <Typography fontSize={12} fontWeight={300} sx={{ opacity: "50%" }}>
+                                        {record.card_data.name}
                                     </Typography>
-                                    {checkRetired(record) ? (
-                                        <span className="retiredMark">Retired</span>
-                                    ) : null}
                                 </Box>
-                                <Typography fontSize={12} fontWeight={300} sx={{ opacity: "50%" }}>
-                                    {record.card_data.name}
-                                </Typography>
                             </Box>
-                        </Box>
-                    </RecordContextProvider>
-                </Link>
+                        </RecordContextProvider>
+                    </Link>
 
-            </Grid >
-        ))
+                </Grid >
+            ))
+        ) : (
+            sortedDecks?.map((record) => (
+                <Grid item xs={12} md={6} lg={4} key={record.id} mt={1}>
+                    <Link to={`/deck/${record.id}/show`} style={{ textDecoration: 'none', color: 'inherit' }} display={'flex'} height={'100%'} >
+                        <RecordContextProvider key={record.id} value={record}>
+                            <Box className="newDeckBox" display={'flex'} p={1.4}>
+                                <img src={record.card_data.image_uris.small} style={{ width: "90px", height: "auto", borderRadius: "3px" }} />
+                                <Box ml={1.5} mt={0.5} width={'100%'} display={'flex'} flexDirection={'column'}>
+                                    <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
+                                        <Typography color={checkRetired(record) ? '#999999' : 'white'} fontSize={20}>
+                                            {record.name}
+                                        </Typography>
+                                        {checkRetired(record) ? (
+                                            <span className="retiredMark">Retired</span>
+                                        ) : null}
+                                    </Box>
+                                    <Typography fontSize={14} fontWeight={300} sx={{ opacity: "50%" }}>
+                                        {record.card_data.name} - {record.card_data.type_line}
+                                    </Typography>
+                                    <Box mt={'auto'} mb={0.5}>
+                                        <DeckColors label={record.id} />
+                                    </Box>
+
+                                </Box>
+                            </Box>
+                        </RecordContextProvider>
+                    </Link>
+
+                </Grid >
+            ))
+        )
     )
 }
 
@@ -449,7 +481,7 @@ export const PlayerShow = () => {
                                                 </Box>
                                             </Grid>
                                             <Grid item mt={3} flex={1}>
-                                                <Box className="playerSectionBox matches" >
+                                                <Box className="playerSectionBox wins" >
                                                     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                                                         <div className="playerSectionBoxIcon" style={{ backgroundColor: "#5b58f6" }}>
                                                             <img src="images\swords-solid.svg" />
@@ -464,7 +496,7 @@ export const PlayerShow = () => {
                                                 </Box>
                                             </Grid>
                                             <Grid item mt={3} flex={1}>
-                                                <Box className="playerSectionBox matches" >
+                                                <Box className="playerSectionBox losses" >
                                                     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                                                         <div className="playerSectionBoxIcon" style={{ backgroundColor: "#5b58f6" }}>
                                                             <img src="images\swords-solid.svg" />
@@ -479,7 +511,7 @@ export const PlayerShow = () => {
                                                 </Box>
                                             </Grid>
                                             <Grid item mt={3} flex={1}>
-                                                <Box className="playerSectionBox matches" >
+                                                <Box className="playerSectionBox winrate" >
                                                     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                                                         <div className="playerSectionBoxIcon" style={{ backgroundColor: "#5b58f6" }}>
                                                             <img src="images\swords-solid.svg" />
@@ -503,7 +535,9 @@ export const PlayerShow = () => {
                                             </Typography>
                                         </Box>
                                         <Box mt={2}>
-                                            <Decks />
+                                            <Grid container columnSpacing={2} rowSpacing={1}>
+                                                <PlayerDecks />
+                                            </Grid>
                                         </Box>
                                     </Grid>
                                 </Grid>

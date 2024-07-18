@@ -59,7 +59,7 @@ const NewMatches = () => {
     const { data: matches } = useGetList(
         'match',
         {
-            pagination: { page: 1, perPage: isSmall ? 5 : 7 },
+            pagination: { page: 1, perPage: isSmall ? 3 : 3 },
             sort: { field: 'id', order: 'DESC' },
         }
     );

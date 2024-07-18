@@ -306,98 +306,108 @@ const MatchHistory = () => {
 
     return (
         <>
-            <Box mb={2} className="matchHistoryBox">
-                <TextField2
-                    label="Search"
-                    variant="outlined"
-                    value={tmpSearchQuery}
-                    onChange={handleSearchChange}
-                    fullWidth
-                />
-                <FormControl fullWidth variant="outlined" margin="normal">
-                    <InputLabel>Type</InputLabel>
-                    <Select
-                        value={filterType}
-                        onChange={handleFilterTypeChange}
-                        label="Type"
-                    >
-                        <MenuItem value="">All</MenuItem>
-                        <MenuItem value="1v1">1v1</MenuItem>
-                        <MenuItem value="3 man ffa">Free For All (3 players)</MenuItem>
-                        <MenuItem value="4 man ffa">Free For All (4 players)</MenuItem>
-                        <MenuItem value="Two head giant">Two Headed Giant</MenuItem>
-                        <MenuItem value="star">Star format</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl fullWidth variant='outlined' margin="normal" sx={{ marginTop: "8px" }}>
-                    <InputLabel>Date</InputLabel>
-                    <Select
-                        value={filterDate}
-                        onChange={handleFilterDateChange}
-                        label="Date"
-                    >
-                        <MenuItem value="">All</MenuItem>
-                        <MenuItem value="last_7_days">Last 7 days</MenuItem>
-                        <MenuItem value="this_month">This month</MenuItem>
-                        <MenuItem value="last_month">Last month</MenuItem>
-                        <MenuItem value="this_year">This Year</MenuItem>
-                        <MenuItem value="last_year">Last Year</MenuItem>
-                    </Select>
-                </FormControl>
+            <Box mb={4} className="matchHistoryBox" display={'flex'} flexDirection={isSmall ? 'column' : 'row'} rowGap={2} columnGap={3}>
+                <Box>
+                    <TextField2
+                        label="Search"
+                        variant="outlined"
+                        value={tmpSearchQuery}
+                        onChange={handleSearchChange}
+                        fullWidth={isSmall ? true : false}
+                        sx={{ minWidth: !isSmall ? '500px' : null }}
+                    />
+                </Box>
+                <Box>
+                    <FormControl fullWidth={isSmall ? true : false} sx={{ minWidth: !isSmall ? '500px' : null }} variant="outlined" margin="none">
+                        <InputLabel>Type</InputLabel>
+                        <Select
+                            value={filterType}
+                            onChange={handleFilterTypeChange}
+                            label="Type"
+                        >
+                            <MenuItem value="">All</MenuItem>
+                            <MenuItem value="1v1">1v1</MenuItem>
+                            <MenuItem value="3 man ffa">Free For All (3 players)</MenuItem>
+                            <MenuItem value="4 man ffa">Free For All (4 players)</MenuItem>
+                            <MenuItem value="Two head giant">Two Headed Giant</MenuItem>
+                            <MenuItem value="star">Star format</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
+                <Box>
+                    <FormControl fullWidth={isSmall ? true : false} sx={{ minWidth: !isSmall ? '500px' : null }} variant='outlined' margin="none">
+                        <InputLabel>Date</InputLabel>
+                        <Select
+                            value={filterDate}
+                            onChange={handleFilterDateChange}
+                            label="Date"
+                        >
+                            <MenuItem value="">All</MenuItem>
+                            <MenuItem value="last_7_days">Last 7 days</MenuItem>
+                            <MenuItem value="this_month">This month</MenuItem>
+                            <MenuItem value="last_month">Last month</MenuItem>
+                            <MenuItem value="this_year">This Year</MenuItem>
+                            <MenuItem value="last_year">Last Year</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
             </Box>
-            {data?.map((match, index) => {
-                const teams = match.players.reduce((acc: any, player: any) => {
-                    if (!acc[player.team]) {
-                        acc[player.team] = [];
-                    }
-                    acc[player.team].push(player);
-                    return acc;
-                }, {});
+            <Grid container spacing={2}>
+                {data?.map((match, index) => {
+                    const teams = match.players.reduce((acc: any, player: any) => {
+                        if (!acc[player.team]) {
+                            acc[player.team] = [];
+                        }
+                        acc[player.team].push(player);
+                        return acc;
+                    }, {});
 
-                const teamOrder = Object.keys(teams).sort((a: any, b: any) => a - b);
+                    const teamOrder = Object.keys(teams).sort((a: any, b: any) => a - b);
 
-                return (
-                    <Box key={match.id}>
-                        <Box className={`matchesBox`}>
-                            <Box>
-                                <Typography>
-                                    <MatchField type={match.type} />
-                                </Typography>
-                                <Typography fontSize={'0.75rem'} sx={{ opacity: "60%" }}>
-                                    {formatDate(match.date_played)}
-                                </Typography>
-                            </Box>
-                            <Box className="content" mt={1}>
-                                {teamOrder.map((team, teamIndex) => (
-                                    <React.Fragment key={team}>
-                                        {teamIndex > 0 && <Box mx={2}>vs</Box>}
-                                        {teams[team].map((item: any, itemIndex: number) => (
-                                            <Box
-                                                className={`matchHistoryDeckImage ${item.result == 'winner' ? 'winnerBorder' : 'loserBorder'}`}
-                                                key={item.deck_id}
-                                                sx={{ mr: itemIndex < teams[team].length - 1 ? 1 : 0 }} // Apply margin-right to all but the last deck in the team
-                                            >
-                                                <Link to={`/deck/${item.deck_id}/show`}>
-                                                    <DeckImage deckId={item.deck_id} />
-                                                </Link>
-                                            </Box>
+                    return (
+                        <Grid item xs={12} lg={4}>
+                            <Box key={match.id} height={'100%'}>
+                                <Box className={`matchesBox`}>
+                                    <Box>
+                                        <Typography>
+                                            <MatchField type={match.type} />
+                                        </Typography>
+                                        <Typography fontSize={'0.75rem'} sx={{ opacity: "60%" }}>
+                                            {formatDate(match.date_played)}
+                                        </Typography>
+                                    </Box>
+                                    <Box className="content" mt={1}>
+                                        {teamOrder.map((team, teamIndex) => (
+                                            <React.Fragment key={team}>
+                                                {teamIndex > 0 && <Box mx={2}>vs</Box>}
+                                                {teams[team].map((item: any, itemIndex: number) => (
+                                                    <Box
+                                                        className={`matchHistoryDeckImage ${item.result == 'winner' ? 'winnerBorder' : 'loserBorder'}`}
+                                                        key={item.deck_id}
+                                                        sx={{ mr: itemIndex < teams[team].length - 1 ? 1 : 0 }} // Apply margin-right to all but the last deck in the team
+                                                    >
+                                                        <Link to={`/deck/${item.deck_id}/show`}>
+                                                            <DeckImage deckId={item.deck_id} />
+                                                        </Link>
+                                                    </Box>
+                                                ))}
+                                            </React.Fragment>
                                         ))}
-                                    </React.Fragment>
-                                ))}
-                            </Box>
-                            {match.notes != '' ? (
-                                <Box mt={1}>
-                                    <Typography fontWeight={300} fontSize={14} sx={{ opacity: "50%" }}>
-                                        {match.notes}
-                                    </Typography>
+                                    </Box>
+                                    {match.notes != '' ? (
+                                        <Box mt={1}>
+                                            <Typography fontWeight={300} fontSize={14} sx={{ opacity: "50%" }}>
+                                                {match.notes}
+                                            </Typography>
 
+                                        </Box>
+                                    ) : null}
                                 </Box>
-                            ) : null}
-
-                        </Box>
-                    </Box>
-                );
-            })}
+                            </Box>
+                        </Grid>
+                    );
+                })}
+            </Grid>
         </>
     )
 }
@@ -428,16 +438,25 @@ export const MatchList = () => {
                 </Box>
             </>
         ) : (
-            <List filters={matchFilters}>
-                <Datagrid rowClick="show">
-                    <TextField source="id" />
-                    <TextField source="type" />
-                    <DateField source="date_played" label="Date" />
-                    <DecksWinner label="Winner" />
-                    <DecksLoser label="Loser" />
-                    <TextField source="notes" />
-                </Datagrid >
-            </List >
+            <>
+                <Grid item xs={12} mt={7} pb={6} mx={4}>
+                    <Card className="playersCard">
+                        <Grid container>
+                            <Grid item xs={12} lg={6}>
+                                <h1>Matches</h1>
+                                <p>Overview off all played matches</p>
+                            </Grid >
+                        </Grid >
+                    </Card >
+                </Grid>
+
+                <ConfirmMatches identity={identity} />
+
+                <Box px={4}>
+                    <CreateButton label="Create Match" />
+                    <MatchHistory />
+                </Box>
+            </>
         )
     )
 }
