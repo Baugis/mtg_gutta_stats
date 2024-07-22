@@ -78,6 +78,12 @@ const MatchCreate = () => {
                 setLoserCount(4);
                 setStarterCount(1);
                 break;
+            case '5 man ffa':
+                setDeckCount(5);
+                setWinnerCount(1);
+                setLoserCount(4);
+                setStarterCount(1);
+                break;
             default:
                 setDeckCount(0);
                 setWinnerCount(0);
@@ -178,6 +184,7 @@ const MatchCreate = () => {
                                 { id: '4 man ffa', name: '4 man ffa' },
                                 { id: 'Two head giant', name: 'Two head giant' },
                                 { id: 'Stjerne', name: 'Stjerne' },
+                                { id: '5 man ffa', name: '5 man ffa' },
                             ]}
                             validate={validateType}
                             onChange={handleTypeChange}
