@@ -2,7 +2,12 @@ interface Match {
     id: string;
     type: string;
     date_played: string;
-    players: Array<{ deck_id: number; name: string; result: string }>;
+    players: {
+        deck_id: number;
+        result: 'winner' | 'loser';
+        owner_id: number;
+        team: number;
+    }[];
     notes?: string;
 }
 
@@ -154,7 +159,10 @@ export const countGamesAgainstDecks = (matches: Match[], currentDeckId: number, 
 
     matches.forEach(match => {
         const currentDeckPlayers = match.players.filter(player => player.deck_id === currentDeckId);
-        const opponentDeckPlayers = match.players.filter(player => player.deck_id !== currentDeckId);
+        if (currentDeckPlayers.length === 0) return;
+
+        const currentTeam = currentDeckPlayers[0].team;
+        const opponentDeckPlayers = match.players.filter(player => player.deck_id !== currentDeckId && player.team !== currentTeam);
 
         currentDeckPlayers.forEach(currentDeckPlayer => {
             opponentDeckPlayers.forEach(opponent => {
