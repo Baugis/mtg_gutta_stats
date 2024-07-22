@@ -283,6 +283,8 @@ const MatchHistory = () => {
                 return 'Two Headed Giant'
             case 'Stjerne':
                 return 'Star format'
+            case '5 man ffa':
+                return 'Free For All (5 players)'
             default:
                 return null
         }
@@ -329,6 +331,7 @@ const MatchHistory = () => {
                             <MenuItem value="1v1">1v1</MenuItem>
                             <MenuItem value="3 man ffa">Free For All (3 players)</MenuItem>
                             <MenuItem value="4 man ffa">Free For All (4 players)</MenuItem>
+                            <MenuItem value="5 man ffa">Free For All (5 players)</MenuItem>
                             <MenuItem value="Two head giant">Two Headed Giant</MenuItem>
                             <MenuItem value="star">Star format</MenuItem>
                         </Select>
@@ -367,7 +370,7 @@ const MatchHistory = () => {
                     return (
                         <Grid item xs={12} lg={4}>
                             <Box key={match.id} height={'100%'}>
-                                <Box className={`matchesBox`}>
+                                <Box className={`matchesBox`} height={'100%'}>
                                     <Box>
                                         <Typography>
                                             <MatchField type={match.type} />
