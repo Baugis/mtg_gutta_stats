@@ -40,6 +40,7 @@ const MatchCreate = () => {
     const [winnerCount, setWinnerCount] = React.useState(0);
     const [loserCount, setLoserCount] = React.useState(0);
     const [starterCount, setStarterCount] = React.useState(1);
+    const [type, setType] = React.useState("");
 
     const [create] = useCreate();
     const redirect = useRedirect();
@@ -53,36 +54,42 @@ const MatchCreate = () => {
                 setWinnerCount(1);
                 setLoserCount(1);
                 setStarterCount(1);
+                setType('1v1')
                 break;
             case '3 man ffa':
                 setDeckCount(3);
                 setWinnerCount(1);
                 setLoserCount(2);
                 setStarterCount(1);
+                setType('3 man ffa')
                 break;
             case '4 man ffa':
                 setDeckCount(4);
                 setWinnerCount(1);
                 setLoserCount(3);
                 setStarterCount(1);
+                setType('4 man ffa')
                 break;
             case 'Two head giant':
                 setDeckCount(4);
                 setWinnerCount(2);
                 setLoserCount(2);
                 setStarterCount(2);
+                setType('Two head giant')
                 break;
             case 'Stjerne':
                 setDeckCount(5);
                 setWinnerCount(1);
                 setLoserCount(4);
                 setStarterCount(1);
+                setType('Stjerne')
                 break;
             case '5 man ffa':
                 setDeckCount(5);
                 setWinnerCount(1);
                 setLoserCount(4);
                 setStarterCount(1);
+                setType('5 man ffa')
                 break;
             default:
                 setDeckCount(0);
@@ -194,7 +201,7 @@ const MatchCreate = () => {
                         <TextInput source="notes" defaultValue="" multiline fullWidth />
                         {deckCount > 0 && (
                             <>
-                                {deckCount === 5 && (
+                                {deckCount === 5 && type == 'Stjerne' && (
                                     <Box mb={2}>
                                         <FormControl component="fieldset">
                                             <FormLabel component="legend" sx={{ color: 'white' }}>Number of Winners</FormLabel>
@@ -211,27 +218,29 @@ const MatchCreate = () => {
                                     </Box>
                                 )}
                                 <Box width={'100%'}>
-                                    <Typography fontSize={18} color={'white'} mb={1}>
-                                        Winners
-                                    </Typography>
-                                    {Array.from({ length: winnerCount }, (_, index) => (
-                                        <ReferenceInput
-                                            key={index}
-                                            label={`Winner ${index + 1}`}
-                                            source={`winner${index + 1}`}
-                                            reference="deck"
-                                            sort={{ field: 'name', order: 'ASC' }}
-                                            perPage={200}
-                                            filter={{ retired: 0 }}
-                                        >
-                                            <AutocompleteInput
-                                                optionText={deckOptionText}
-                                                inputText={deckInputText}
-                                                sx={{ minWidth: "300px" }}
-                                                fullWidth
-                                            />
-                                        </ReferenceInput>
-                                    ))}
+                                    <Grid xs={12} sm={6}>
+                                        <Typography fontSize={18} color={'white'} mb={1}>
+                                            Winners
+                                        </Typography>
+                                        {Array.from({ length: winnerCount }, (_, index) => (
+                                            <ReferenceInput
+                                                key={index}
+                                                label={`Winner ${index + 1}`}
+                                                source={`winner${index + 1}`}
+                                                reference="deck"
+                                                sort={{ field: 'name', order: 'ASC' }}
+                                                perPage={200}
+                                                filter={{ retired: 0 }}
+                                            >
+                                                <AutocompleteInput
+                                                    optionText={deckOptionText}
+                                                    inputText={deckInputText}
+                                                    sx={{ minWidth: "300px" }}
+                                                    fullWidth
+                                                />
+                                            </ReferenceInput>
+                                        ))}
+                                    </Grid>
                                     <Grid xs={12} sm={6}>
                                         <Typography fontSize={18} color={'white'} mb={1}>
                                             Losers
@@ -249,6 +258,7 @@ const MatchCreate = () => {
                                                     optionText={deckOptionText}
                                                     inputText={deckInputText}
                                                     sx={{ minWidth: "300px" }}
+                                                    fullWidth
                                                 />
                                             </ReferenceInput>
                                         ))}
