@@ -51,9 +51,12 @@ const LoginScreen = ({ }) => {
         <form onSubmit={handleSubmit} style={{ width: "100%" }} className="loginForm">
             <Grid container justifyContent={'center'}>
                 <Grid item xs={12} md={6} lg={3}>
-                    <Box p={5} mt={20}>
-                        <Typography fontSize={30} fontWeight={600} py={2} textAlign={'center'} color={'white'}>
-                            MagiGutta
+                    <Box py={5} px={3} mt={20}>
+                        <Typography fontSize={24} fontWeight={400} py={2} textAlign={'center'} color={'white'}>
+                            Login Now
+                        </Typography>
+                        <Typography textAlign={'center'} fontSize={14} color={'rgba(255, 255, 255, 0.5)'}>
+                            Welcome back to MagiGutta! Enter your username and password to enjoy the latest features of MagiGutta
                         </Typography>
                         <Grid container rowSpacing={2} mt={3}>
                             <Grid xs={12} mb={2}>
@@ -63,7 +66,7 @@ const LoginScreen = ({ }) => {
                                     variant="outlined"
                                     onChange={e => setUsername(e.target.value)}
                                     fullWidth
-                                    className="pageInput"
+                                    className="pageInput customInput"
                                     placeholder='Username'
                                 />
                             </Grid>
@@ -76,6 +79,7 @@ const LoginScreen = ({ }) => {
                                     onChange={e => setPassword(e.target.value)}
                                     fullWidth
                                     autoComplete="current-password"
+                                    className="customInput"
                                     InputProps={{
                                         endAdornment: (
                                             <InputAdornment position="end">
@@ -93,8 +97,8 @@ const LoginScreen = ({ }) => {
                             </Grid>
 
                             <Grid xs={12} mt={3} display={'flex'} justifyContent={'center'}>
-                                <Button type="submit" variant="contained">
-                                    Login
+                                <Button type="submit" variant="contained" className="loginButton" fullWidth>
+                                    Login Now
                                 </Button>
                             </Grid>
                         </Grid>

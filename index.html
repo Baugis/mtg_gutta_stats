@@ -20,11 +20,72 @@
             margin: 0;
             padding: 0;
             font-family: sans-serif;
-            background-color: #0d101f !important;
+            background-color: #050B18 !important;
         }
 
         #main-content {
-            background-color: #0d101f !important;
+            background-color: #050B18 !important;
+        }
+
+        .layout {
+            background-color: #050B18 !important;
+        }
+
+        .swiper-container {
+            width: 100%;
+        }
+
+        .swiper-slide {
+            width: fit-content;
+        }
+
+        .gallery {
+            div {
+                overflow: hidden;
+                border-radius: 14px 14px 0 0;
+            }
+
+            nav {
+                display: flex;
+                height: 140px;
+                margin: 0 -10vw
+            }
+
+            nav a {
+                flex: 1;
+                height: 100%;
+                transform: skew(-15deg);
+                overflow: hidden;
+                border-right: 1px solid #050B18;
+                border-left: 1px solid #050B18;
+            }
+
+            nav a img {
+                width: 140%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+                object-position: center center;
+                transform: skew(15deg);
+                margin: 0 -20%;
+            }
+
+        }
+
+        .eventGalleryImg {
+            transform: skew(-15deg);
+
+            img {
+                transform: skew(15deg);
+            }
+        }
+
+        .eventGalleryImg:first-child img {
+            border-radius: 16px 0 0 0;
+        }
+
+        .eventGalleryImg:last-child img {
+            border-radius: 0 16px 0 0;
         }
 
         h1,
@@ -243,7 +304,6 @@
         .show-page {
             .MuiToolbar-root {
                 display: none;
-                background-color: #0d101f;
                 color: white;
 
                 svg {
@@ -540,7 +600,6 @@
             }
 
             .MuiToolbar-root {
-                background-color: #13182e !important;
                 border-top: 0.5px solid rgba(255, 255, 255, 0.1);
 
                 button {
@@ -583,7 +642,6 @@
             }
 
             .MuiToolbar-root {
-                background-color: #13182e !important;
                 border-top: 0.5px solid rgba(255, 255, 255, 0.1);
 
                 button {
@@ -626,7 +684,6 @@
             }
 
             .MuiToolbar-root {
-                background-color: #13182e !important;
                 border-top: 0.5px solid rgba(255, 255, 255, 0.1);
 
                 button {
@@ -679,7 +736,6 @@
 
         .RaFileInput-dropZone,
         .MuiToolbar-root {
-            background-color: #13182e !important;
             color: rgba(255, 255, 255, 0.658) !important;
         }
 
@@ -813,6 +869,40 @@
                 color: white;
                 margin-left: 10px;
             }
+        }
+
+        .customInput {
+            background-color: #1F2430;
+            border-radius: 10px;
+            color: #696C75 !important;
+
+            fieldset {
+                border: none !important;
+                color: #696C75 !important;
+            }
+
+            input:placeholder {
+                color: #909297 !important;
+            }
+
+            legend {
+                display: none;
+            }
+
+        }
+
+        .loginButton {
+            background-color: #F4D144 !important;
+            color: #050B18 !important;
+            padding: 15px 20px !important;
+            font-size: 16px !important;
+            text-transform: none !important;
+            border-radius: 10px !important;
+        }
+
+        header {
+            box-shadow: none !important;
+            background-color: #050B18 !important;
         }
 
 

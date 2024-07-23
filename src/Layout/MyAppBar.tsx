@@ -6,11 +6,5 @@ import { Typography } from '@mui/material';
 
 
 export const MyAppBar = () => (
-    <AppBar color="primary">
-        <Box flex="1" />
-        <Typography variant='h5' fontWeight={600} py={2}>
-            MagiGutta
-        </Typography>
-        <Box flex="1" />
-    </AppBar>
+    <AppBar color="primary" sx={{ padding: '7.5px 0' }} />
 );

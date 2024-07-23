@@ -1,8 +1,7 @@
-import { CustomRoutes, Logout, Menu, MenuItemLink, useGetIdentity } from 'react-admin';
-import LabelIcon from '@mui/icons-material/Label';
+import { Logout, Menu, MenuItemLink, useGetIdentity } from 'react-admin';
 import { Typography } from '@mui/material';
-import { Route } from "react-router";
 import PersonIcon from '@mui/icons-material/Person';
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 
 export const MyMenu = () => {
     const { data: identity, isLoading, error } = useGetIdentity();
@@ -23,8 +22,13 @@ export const MyMenu = () => {
                 Account
             </Typography>
             <MenuItemLink
+                to="my-decks"
+                primaryText="My decks"
+                leftIcon={<HomeRepairServiceIcon />}
+            />
+            <MenuItemLink
                 to="/profile"
-                primaryText="Profile"
+                primaryText="Edit profile"
                 leftIcon={<PersonIcon />}
             />
             <Logout className="logoutButton" />

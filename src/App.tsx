@@ -55,6 +55,9 @@ export const App = () => {
       <Resource name="deck" list={DeckList} show={DeckShow} edit={DeckEdit} create={DeckCreate} icon={StyleIcon} />
       <Resource name="match" list={MatchList} show={MatchShow} create={MatchCreate} icon={Diversity3Icon} />
       <CustomRoutes>
+        <Route path="/my-decks" element={<ProfileEdit />} />
+      </CustomRoutes>
+      <CustomRoutes>
         <Route path="/profile" element={<ProfileEdit />} />
       </CustomRoutes>
     </Admin>
