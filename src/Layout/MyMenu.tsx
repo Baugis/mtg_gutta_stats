@@ -9,6 +9,7 @@ export const MyMenu = () => {
     return (
         <Menu className="sideMenu">
             <Typography variant='h5' fontWeight={600} pt={4} color={'white'} textAlign={'center'}>
+                {/* <img src="public\images\magic gutta logo hvit-gul.png" /> */}
                 MagiGutta
             </Typography>
             <Typography color={'#868ba3'} fontWeight={400} fontSize={16} pt={3} sx={{ opacity: "60%" }}>

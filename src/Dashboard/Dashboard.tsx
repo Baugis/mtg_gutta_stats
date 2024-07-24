@@ -1,12 +1,9 @@
-import { Card, Grid, useMediaQuery, Theme, Box, Typography, IconButton, Icon } from "@mui/material";
+import { useMemo, useState } from 'react';
 import { Count, Link, useGetList, useGetMany, useGetIdentity, useGetOne } from "react-admin";
+import { Card, Grid, useMediaQuery, Theme, Box, Typography, IconButton, Icon, Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material";
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { useMemo } from 'react';
 import { calculateTotalGames, calculateTotalLosses, calculateTotalWins, calculateTotalWinPercentage } from "../Helpers/utils";
-
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper-bundle.css';
 
 const NewDecks = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
@@ -191,6 +188,59 @@ const getTimeOfDayGreeting = () => {
     }
 };
 
+const Notifications = () => {
+    const { data: identity, isLoading, error } = useGetIdentity();
+    const greeting = getTimeOfDayGreeting();
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <Box display={'flex'} alignItems={'center'} width={'100%'}>
+            <img src={identity?.avatar} style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '50%' }} />
+            <Box ml={2} mr={'auto'}>
+                <Typography fontSize={12} color={'rgba(255, 255, 255, 0.5)'}>
+                    {greeting}
+                </Typography>
+                <Typography fontSize={22} color={'#FFFFFF'} sx={{ marginTop: '-2px' }}>
+                    {identity?.fullName}
+                </Typography>
+            </Box>
+            <Box sx={{ backgroundColor: '#1F2430', width: '56px', height: '56px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'} onClick={handleClickOpen}>
+                <img src="images\bell-light.svg" style={{ width: '24px', height: '24px' }} />
+                <Box sx={{ position: 'absolute', top: '-4px', right: '0px' }} bgcolor={'#FF4040'} width={'20px'} height={'20px'} borderRadius={'50%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                    <Typography color={'white'} fontSize={13}>
+                        1
+                    </Typography>
+                </Box>
+            </Box>
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                fullWidth
+            >
+                <DialogTitle sx={{ backgroundColor: '#050B18', color: 'white' }}>Your Notifications</DialogTitle>
+                <DialogContent sx={{ backgroundColor: '#050B18', color: 'white' }}>
+                    <Typography>
+                        Incomming matches
+                    </Typography>
+
+                    <Typography>
+                        Unconfirmed matches
+                    </Typography>
+                </DialogContent>
+            </Dialog>
+        </Box >
+    )
+}
+
 const RecentEvents = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
     const { data: matches } = useGetList(
@@ -257,25 +307,12 @@ const RecentEvents = () => {
 export const Dashboard = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
     const { data: identity, isLoading, error } = useGetIdentity();
-    const greeting = getTimeOfDayGreeting();
 
     return (
         isSmall ? (
             <Grid container mt={4} px={1.5}>
-                <Box display={'flex'} alignItems={'center'} width={'100%'}>
-                    <img src={identity?.avatar} style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '50%' }} />
-                    <Box ml={2} mr={'auto'}>
-                        <Typography fontSize={12} color={'rgba(255, 255, 255, 0.5)'}>
-                            {greeting}
-                        </Typography>
-                        <Typography fontSize={22} color={'#FFFFFF'} sx={{ marginTop: '-2px' }}>
-                            {identity?.fullName}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ backgroundColor: '#1F2430', width: '56px', height: '56px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                        <img src="images\bell-light.svg" style={{ width: '24px', height: '24px' }} />
-                    </Box>
-                </Box>
+
+                <Notifications />
 
                 <Grid item xs={12} mt={5}>
                     <Box display={'flex'} columnGap={3}>
@@ -303,9 +340,9 @@ export const Dashboard = () => {
                 <Grid item xs={12} mt={5}>
                     <Box display={'flex'} columnGap={3}>
                         <Box flex={1} display={'flex'} justifyContent={'center'}>
-                            <Link to="match/create">
-                                <Box sx={{ width: '64px' }}>
-                                    <Box sx={{ backgroundColor: '#1F2430', width: '64px', height: '64px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                            <Link to="match/create" width={'100%'}>
+                                <Box >
+                                    <Box sx={{ backgroundColor: '#1F2430', width: '100%', maxWidth: '65px', height: 'auto', aspectRatio: 1, borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                                         <img src="images\icons\AIM.png" style={{ width: '37px', height: '37px' }} />
                                     </Box>
                                     <Typography fontSize={12} color={'white'} textAlign={'center'} mt={1}>
@@ -315,9 +352,9 @@ export const Dashboard = () => {
                             </Link>
                         </Box>
                         <Box flex={1} display={'flex'} justifyContent={'center'}>
-                            <Link to="deck">
-                                <Box sx={{ width: '64px' }}>
-                                    <Box sx={{ backgroundColor: '#1F2430', width: '64px', height: '64px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                            <Link to="deck" width={'100%'}>
+                                <Box>
+                                    <Box sx={{ backgroundColor: '#1F2430', width: '100%', maxWidth: '65px', height: 'auto', aspectRatio: 1, borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                                         <img src="images\icons\SPELLBOOK.png" style={{ width: '37px', height: '37px', marginRight: '2px' }} />
                                     </Box>
                                     <Typography fontSize={12} color={'white'} textAlign={'center'} mt={1}>
@@ -327,9 +364,9 @@ export const Dashboard = () => {
                             </Link>
                         </Box>
                         <Box flex={1} display={'flex'} justifyContent={'center'}>
-                            <Link to="player">
-                                <Box sx={{ width: '64px' }}>
-                                    <Box sx={{ backgroundColor: '#1F2430', width: '64px', height: '64px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                            <Link to="player" width={'100%'}>
+                                <Box >
+                                    <Box sx={{ backgroundColor: '#1F2430', width: '100%', maxWidth: '65px', height: 'auto', aspectRatio: 1, borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                                         <img src="images\icons\GHOST.png" style={{ width: '37px', height: '37px' }} />
                                     </Box>
                                     <Typography fontSize={12} color={'white'} textAlign={'center'} mt={1}>
@@ -339,9 +376,9 @@ export const Dashboard = () => {
                             </Link>
                         </Box>
                         <Box flex={1} display={'flex'} justifyContent={'center'}>
-                            <Link to="match">
-                                <Box sx={{ width: '64px' }}>
-                                    <Box sx={{ backgroundColor: '#1F2430', width: '64px', height: '64px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                            <Link to="match" width={'100%'}>
+                                <Box >
+                                    <Box sx={{ backgroundColor: '#1F2430', width: '100%', maxWidth: '65px', height: 'auto', aspectRatio: 1, borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                                         <img src="images\icons\ROCKET.png" style={{ width: '37px', height: '37px' }} />
                                     </Box>
                                     <Typography fontSize={12} color={'white'} textAlign={'center'} mt={1}>
