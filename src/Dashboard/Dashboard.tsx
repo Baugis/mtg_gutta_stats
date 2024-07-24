@@ -4,6 +4,7 @@ import { Card, Grid, useMediaQuery, Theme, Box, Typography, IconButton, Icon, Di
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { calculateTotalGames, calculateTotalLosses, calculateTotalWins, calculateTotalWinPercentage } from "../Helpers/utils";
+import { formatDate } from '../Helpers/formatDate';
 
 const NewDecks = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
@@ -162,6 +163,7 @@ const RecentEvents = () => {
         {
             pagination: { page: 1, perPage: isSmall ? 3 : 3 },
             sort: { field: 'id', order: 'DESC' },
+            filter: { confirmed: 1 }
         }
     );
 
@@ -180,7 +182,7 @@ const RecentEvents = () => {
         console.log("Deck: ", deck)
 
         return (
-            <a href=""><img src={deck?.card_data?.image_uris?.art_crop} /></a>
+            <a href={`/#/deck/${id.id}/show`}><img src={deck?.card_data?.image_uris?.art_crop} /></a>
         )
     }
 
@@ -206,7 +208,7 @@ const RecentEvents = () => {
                                         New Match - ({match.type})
                                     </Typography>
                                     <Typography fontSize={14} color={'rgba(255, 255, 255, 0.5)'}>
-                                        22.04.2001
+                                        {formatDate(match.date_played)}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -216,6 +218,33 @@ const RecentEvents = () => {
             </Grid>
         </Box>
     );
+}
+
+const CountNotifications = () => {
+    const { data: identity, isLoading, error } = useGetIdentity();
+    const { data: matches } = useGetList(
+        'match'
+    )
+
+    let total = 0;
+    matches?.forEach((match) => {
+        match.players.forEach((player: any) => {
+            /* console.log("Player: ", player) */
+            if (player.owner_id == identity?.id && match.confirmed == 0 && match.registered_by !== identity?.id) {
+                total += 1;
+            }
+        })
+    })
+
+    return (
+        total >= 1 ? (
+            <Box sx={{ position: 'absolute', top: '-2px', right: '-2px' }} bgcolor={'#FF4040'} width={'20px'} height={'20px'} borderRadius={'50%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                <Typography color={'white'} fontSize={13}>
+                    {total}
+                </Typography>
+            </Box>
+        ) : null
+    )
 }
 
 export const Dashboard = () => {
@@ -239,11 +268,7 @@ export const Dashboard = () => {
                     <Box sx={{ backgroundColor: '#1F2430', width: '56px', height: '56px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'}>
                         <Link to="/notifications" display={'flex'} alignItems={'center'}>
                             <img src="images\bell-light.svg" style={{ width: '24px', height: '24px' }} />
-                            <Box sx={{ position: 'absolute', top: '-2px', right: '-2px' }} bgcolor={'#FF4040'} width={'20px'} height={'20px'} borderRadius={'50%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                                <Typography color={'white'} fontSize={13}>
-                                    1
-                                </Typography>
-                            </Box>
+                            <CountNotifications />
                         </Link>
                     </Box>
                 </Box >
