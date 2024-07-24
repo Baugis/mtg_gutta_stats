@@ -169,7 +169,7 @@ export const DeckList = () => {
                                                     </Typography>
                                                     <Box display={'flex'}>
                                                         <Typography color={'white'}>
-                                                            <DeckColors label="Deck colors" />
+                                                            <DeckColors label="Deck colors" name={false} />
                                                         </Typography>
                                                         <Box width={'1px'} bgcolor={'rgba(255, 255, 255, 0.5)'} mx={1.5} my={0.5}></Box>
                                                         <Typography color={'#607095'} my={'auto'}>

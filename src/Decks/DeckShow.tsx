@@ -1,28 +1,17 @@
 import { Show, TabbedShowLayout, useRecordContext, TextField, Form, ReferenceField, useGetList, List, Datagrid, useGetOne, DateField, ImageField, Link, UrlField, Count, EditButton, useGetIdentity } from 'react-admin';
-import Grid from '@mui/material/Unstable_Grid2';
-import Card from '@mui/material/Card';
+import { Card, Grid } from '@mui/material';
 import DeckColors from '../Decks/DeckColors';
 import { Fragment, useEffect, useState, useMemo } from 'react';
 import ManaSymbols from '../Helpers/ManaSymbols';
 import { Typography, useMediaQuery, Theme, Box } from '@mui/material';
 import { countGamesAgainstDecks } from '../Helpers/utils';
 import { checkRetired } from '../Helpers/checkRetired';
+import DeckArchtypes from './DeckArchtypes';
 
 interface DeckInfoProps {
     type: 'name' | 'deck';
     label?: string;
 }
-
-const DeckInfo = ({ type }: DeckInfoProps) => {
-    const record = useRecordContext();
-    if (!record) return null;
-
-    return (
-        type === 'name' ? (
-            <h2 className='mb-0'>{record.name} <ManaSymbols colorIdentity={record.colorIdentity} /></h2>
-        ) : null
-    );
-};
 
 const formatDate = (inputDate: any) => {
     const date = new Date(inputDate);
@@ -323,7 +312,8 @@ const IdentityChecker = () => {
                 console.log('Identity ID matches Deck ID');
                 const toolbar = document.getElementsByClassName('MuiToolbar-root');
                 if (toolbar.length > 0) {
-                    toolbar[1].style.display = 'flex';
+                    /* toolbar[1].style.display = 'flex'; */
+                    toolbar[1].style.display = 'none';
                     console.log("Element: ", toolbar[1]);
                 }
             } else {
@@ -360,60 +350,171 @@ const RetiredText = () => {
     return null;
 }
 
+const getDeckStats = () => {
+    const record = useRecordContext();
+    if (!record) return false;
+
+
+}
+
+
 export const DeckShow = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
 
     return (
-        <Show className="form">
+        <Show className="form" actions={undefined}>
             <Form>
-                <IdentityChecker />
+                {/* <IdentityChecker /> */}
                 {isSmall ? (
-                    <Box className="deckShowBox" pb={4} mt={3}>
-                        <Box px={1} pt={2}>
-                            <RetiredText />
-                            <Typography mb={1} variant='h5'>
-                                <TextField source="name" variant='h5' /> - (<TextField source="owner_name" variant='h5' fontWeight={300} />)
-                            </Typography>
-                            <ImageField source='card_data.image_uris.art_crop' className="deckShowMobile" />
-                        </Box>
-                        <Box px={1} mt={0.3}>
-                            <Typography>
-                                <TextField source="card_data.name" variant='h6' fontWeight={400} />
-                            </Typography>
-                            <Typography>
-                                <TextField source="card_data.type_line" fontSize={16} fontWeight={400} sx={{ opacity: "80%" }} />
-                            </Typography>
-                            <Typography variant='body1'>
-                                <TextField source="card_data.oracle_text" fontWeight={300} sx={{ opacity: "60%" }} />
-                            </Typography>
-                            <Typography variant='body1' fontStyle="italic">
-                                <TextField source="card_data.flavor_text" sx={{ opacity: "60%" }} />
-                            </Typography>
-                            <Typography variant='h6' mb={2} >
-                                <TextField source="card_data.power" variant='h6' />/<TextField source="card_data.toughness" variant='h6' />
-                            </Typography>
-                            <span className="newDeckType">
-                                <TextField source="arctype" />
-                            </span>
-                            <DeckBoxLink />
-                        </Box>
-                        <Box mt={5} px={1}>
-                            <Box display={'flex'} alignItems={'center'} mb={2}>
-                                <img src="images\swords-solid.svg" style={{ height: "23px" }} />
-                                <Typography fontSize={17} color={'white'} ml={1}>
-                                    Match history
-                                </Typography>
+                    <Box width={'100%'}>
+                        <Box position={'relative'}>
+                            <ImageField source="card_data.image_uris.art_crop" className="deckShowImage" />
+                            <Box position={'absolute'} display={'flex'} justifyContent={'space-between'} width={'100%'} sx={{ top: '32.5px' }} px={1.5}>
+                                <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.28)', width: 'auto', height: '56px', borderRadius: '50%', aspectRatio: 1 }} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'}>
+                                    <Link to="/deck" display={'flex'} alignItems={'center'}>
+                                        <img src="images\icons\arrow-left-light-white.svg" style={{ width: '22px', height: '22px', color: 'white', fill: 'white' }} />
+                                    </Link>
+                                </Box>
+                                <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.28)', width: 'auto', height: '56px', borderRadius: '50%', aspectRatio: 1 }} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'}>
+                                    <img src="images\icons\ellipsis-light (1).svg" style={{ width: '76px', height: '27px', color: 'white', fill: 'white' }} />
+                                </Box>
                             </Box>
-                            <MatchHistory />
                         </Box>
-                        <Box mt={5} px={1}>
-                            <Box display={'flex'} alignItems={'center'} mb={2}>
-                                <img src="images\cards-blank-solid.svg" style={{ height: "23px" }} />
-                                <Typography fontSize={17} color={'white'} ml={1}>
-                                    Rival decks
-                                </Typography>
+
+                        <Box bgcolor={'#050B18'} sx={{ transform: 'translateY(-25px)' }} width={'100%'} borderRadius={'40px 40px 0 0'} px={3.5}>
+                            <Box sx={{ transform: 'translateY(-40px)' }}>
+                                <Box display={'flex'}>
+                                    <ImageField source="card_data.image_uris.normal" className="deckShowCardImage" />
+                                    <Box mt={6.5} ml={1.5}>
+                                        <Typography>
+                                            <TextField source="name" fontSize={20} color={'white'} />
+                                        </Typography>
+                                        <Typography color={'#607095'}>
+                                            {/* <DeckColors label="Deck colors" name={true} /> */}
+                                            <TextField source="card_data.type_line" />
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                                <Box display={'flex'} columnGap={1} mt={1}>
+                                    <DeckArchtypes />
+                                </Box>
+                                <Box mt={2}>
+                                    <Typography>
+                                        <TextField source="card_data.oracle_text" color={'rgba(238, 242, 251, 0.7)'} />
+                                    </Typography>
+                                    <Typography>
+                                        <TextField source="card_data.flavor_text" color={'rgba(238, 242, 251, 0.4)'} fontStyle={'italic'} />
+                                    </Typography>
+                                </Box>
+                                <Box mt={2}>
+                                    <Typography fontSize={16} color={'white'}>
+                                        Deck statistics
+                                    </Typography>
+
+                                    <Box mt={1}>
+                                        <Grid container spacing={2}>
+                                            <Grid item xs={6}>
+                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1}>
+                                                    <Typography fontSize={15} color={'white'}>
+                                                        1 vs 1
+                                                    </Typography>
+                                                    <Grid container>
+                                                        <Grid item xs={6}>
+                                                            <Box display={'flex'} mt={0.5}>
+                                                                <Typography fontSize={12} color={'#707070'}>
+                                                                    Games
+                                                                </Typography>
+                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
+                                                                    10
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Box display={'flex'} mt={0.5}>
+                                                                <Typography fontSize={12} color={'#707070'}>
+                                                                    Wins
+                                                                </Typography>
+                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
+                                                                    10
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Box display={'flex'} mt={0.5}>
+                                                                <Typography fontSize={12} color={'#707070'}>
+                                                                    Winrate
+                                                                </Typography>
+                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
+                                                                    10
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Box display={'flex'} mt={0.5}>
+                                                                <Typography fontSize={12} color={'#707070'}>
+                                                                    Losses
+                                                                </Typography>
+                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
+                                                                    10
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1}>
+                                                    <Typography fontSize={15} color={'white'}>
+                                                        3 Man FFA
+                                                    </Typography>
+                                                    <Grid container>
+                                                        <Grid item xs={6}>
+                                                            <Box display={'flex'} mt={0.5}>
+                                                                <Typography fontSize={12} color={'#707070'}>
+                                                                    Games
+                                                                </Typography>
+                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
+                                                                    10
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Box display={'flex'} mt={0.5}>
+                                                                <Typography fontSize={12} color={'#707070'}>
+                                                                    Wins
+                                                                </Typography>
+                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
+                                                                    10
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Box display={'flex'} mt={0.5}>
+                                                                <Typography fontSize={12} color={'#707070'}>
+                                                                    Winrate
+                                                                </Typography>
+                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
+                                                                    10
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Box display={'flex'} mt={0.5}>
+                                                                <Typography fontSize={12} color={'#707070'}>
+                                                                    Losses
+                                                                </Typography>
+                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
+                                                                    10
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Box>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                </Box>
                             </Box>
-                            <Rivals />
                         </Box>
                     </Box>
                 ) : (

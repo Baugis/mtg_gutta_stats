@@ -8,7 +8,7 @@ const colorMap = colorCombinations.reduce((acc, combo) => {
     return acc;
 }, {});
 
-const DeckColors = ({ label }: { label: string }) => {
+const DeckColors = ({ label, name }: { label: string, name: Boolean }) => {
     const record = useRecordContext();
     if (!record) return null;
 
@@ -17,7 +17,9 @@ const DeckColors = ({ label }: { label: string }) => {
 
     return (
         <div style={{ textWrap: 'nowrap' }}>
-            {/* <span>{colorName} </span> */}
+            {name ? (
+                <span>{colorName} </span>
+            ) : null}
             {colors.map((color: string, index: React.Key) => (
                 <span key={index} className={`mana-${color.toLowerCase()}`}></span>
             ))}
