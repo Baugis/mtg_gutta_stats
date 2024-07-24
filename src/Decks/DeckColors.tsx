@@ -16,8 +16,8 @@ const DeckColors = ({ label }: { label: string }) => {
     const colorName = colorMap[colors] || 'Unknown Combination';
 
     return (
-        <div>
-            <span>{colorName} </span>
+        <div style={{ textWrap: 'nowrap' }}>
+            {/* <span>{colorName} </span> */}
             {colors.map((color: string, index: React.Key) => (
                 <span key={index} className={`mana-${color.toLowerCase()}`}></span>
             ))}

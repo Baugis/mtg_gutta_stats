@@ -284,7 +284,10 @@
         }
 
         .mobileGridImage img {
-            width: 72px !important;
+            width: 61px !important;
+            height: 61px !important;
+            object-fit: cover !important;
+            border-radius: 10px;
             display: flex;
             align-items: center;
         }
@@ -631,7 +634,7 @@
         }
 
         .loginForm {
-            background-color: #0d101f !important;
+            background-color: #050B18 !important;
 
             .MuiCardContent-root {
                 padding-bottom: 0;
@@ -881,12 +884,16 @@
                 color: #696C75 !important;
             }
 
-            input:placeholder {
-                color: #909297 !important;
-            }
-
             legend {
                 display: none;
+            }
+
+            label {
+                color: #696C75 !important;
+            }
+
+            input {
+                color: rgba(255, 255, 255, 0.8)
             }
 
         }

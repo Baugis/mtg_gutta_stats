@@ -158,7 +158,7 @@ export const Notifications = () => {
     const { data: identity, isLoading, error } = useGetIdentity();
 
     return (
-        <Grid container mt={3} px={1.5}>
+        <Grid container mt={4} px={1.5}>
             <Grid item xs={12} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                 <Box sx={{ backgroundColor: '#1F2430', width: '56px', height: '56px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'}>
                     <Link to="/" display={'flex'} alignItems={'center'}>
