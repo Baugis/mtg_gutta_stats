@@ -28,6 +28,7 @@ import LoginScreen from "./Login/LoginScreen";
 import { Route } from "react-router";
 import ProfileEdit from "./Profile/ProfileEdit";
 import { DeckEdit } from "./Decks/DeckEdit";
+import { Notifications } from "./Dashboard/Notifications";
 
 const theme = {
   palette: {
@@ -54,6 +55,9 @@ export const App = () => {
       <Resource name="player" list={PlayerList} show={PlayerShow} icon={PersonIcon} />
       <Resource name="deck" list={DeckList} show={DeckShow} edit={DeckEdit} create={DeckCreate} icon={StyleIcon} />
       <Resource name="match" list={MatchList} show={MatchShow} create={MatchCreate} icon={Diversity3Icon} />
+      <CustomRoutes>
+        <Route path="notifications" element={<Notifications />} />
+      </CustomRoutes>
       <CustomRoutes>
         <Route path="/my-decks" element={<ProfileEdit />} />
       </CustomRoutes>

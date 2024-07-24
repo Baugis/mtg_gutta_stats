@@ -101,39 +101,6 @@ const NewMatches = () => {
     );
 };
 
-const ConfirmMatches = (identity: any) => {
-    /* console.log("Tewster123: ", identity.identity.id) */
-
-    const { data: matches } = useGetList(
-        'match'
-    )
-
-    let playerMatches: any[] = [];
-    matches?.forEach((match) => {
-        match.players.forEach((player: any) => {
-            /* console.log("Player: ", player) */
-            if (player.owner_id == identity.identity.id && match.confirmed == 0) {
-                playerMatches.push(match)
-            }
-        })
-    })
-
-    if (playerMatches.length > 0) {
-        return (
-            <Box bgcolor={'#13182e'} mb={2} py={2} px={2}>
-                <Link to="match">
-                    <Typography color={'white'} fontSize={17} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-                        <span>You have an unconfirmed match</span>
-                        <img src="public\images\arrow-right-solid.svg" style={{ height: '20px' }} />
-                    </Typography>
-                </Link>
-            </Box>
-        )
-    }
-
-    return null;
-}
-
 
 
 
@@ -187,59 +154,6 @@ const getTimeOfDayGreeting = () => {
         return 'Good Evening';
     }
 };
-
-const Notifications = () => {
-    const { data: identity, isLoading, error } = useGetIdentity();
-    const greeting = getTimeOfDayGreeting();
-    const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    return (
-        <Box display={'flex'} alignItems={'center'} width={'100%'}>
-            <img src={identity?.avatar} style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '50%' }} />
-            <Box ml={2} mr={'auto'}>
-                <Typography fontSize={12} color={'rgba(255, 255, 255, 0.5)'}>
-                    {greeting}
-                </Typography>
-                <Typography fontSize={22} color={'#FFFFFF'} sx={{ marginTop: '-2px' }}>
-                    {identity?.fullName}
-                </Typography>
-            </Box>
-            <Box sx={{ backgroundColor: '#1F2430', width: '56px', height: '56px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'} onClick={handleClickOpen}>
-                <img src="images\bell-light.svg" style={{ width: '24px', height: '24px' }} />
-                <Box sx={{ position: 'absolute', top: '-4px', right: '0px' }} bgcolor={'#FF4040'} width={'20px'} height={'20px'} borderRadius={'50%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                    <Typography color={'white'} fontSize={13}>
-                        1
-                    </Typography>
-                </Box>
-            </Box>
-
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                fullWidth
-            >
-                <DialogTitle sx={{ backgroundColor: '#050B18', color: 'white' }}>Your Notifications</DialogTitle>
-                <DialogContent sx={{ backgroundColor: '#050B18', color: 'white' }}>
-                    <Typography>
-                        Incomming matches
-                    </Typography>
-
-                    <Typography>
-                        Unconfirmed matches
-                    </Typography>
-                </DialogContent>
-            </Dialog>
-        </Box >
-    )
-}
 
 const RecentEvents = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
@@ -307,12 +221,32 @@ const RecentEvents = () => {
 export const Dashboard = () => {
     const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('md'));
     const { data: identity, isLoading, error } = useGetIdentity();
+    const greeting = getTimeOfDayGreeting();
 
     return (
         isSmall ? (
             <Grid container mt={4} px={1.5}>
-
-                <Notifications />
+                <Box display={'flex'} alignItems={'center'} width={'100%'}>
+                    <img src={identity?.avatar} style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '50%' }} />
+                    <Box ml={2} mr={'auto'}>
+                        <Typography fontSize={12} color={'rgba(255, 255, 255, 0.5)'}>
+                            {greeting}
+                        </Typography>
+                        <Typography fontSize={22} color={'#FFFFFF'} sx={{ marginTop: '-2px' }}>
+                            {identity?.fullName}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ backgroundColor: '#1F2430', width: '56px', height: '56px', borderRadius: '50%' }} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'}>
+                        <Link to="/notifications" display={'flex'} alignItems={'center'}>
+                            <img src="images\bell-light.svg" style={{ width: '24px', height: '24px' }} />
+                            <Box sx={{ position: 'absolute', top: '-2px', right: '-2px' }} bgcolor={'#FF4040'} width={'20px'} height={'20px'} borderRadius={'50%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                                <Typography color={'white'} fontSize={13}>
+                                    1
+                                </Typography>
+                            </Box>
+                        </Link>
+                    </Box>
+                </Box >
 
                 <Grid item xs={12} mt={5}>
                     <Box display={'flex'} columnGap={3}>
