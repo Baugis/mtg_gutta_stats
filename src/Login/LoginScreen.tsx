@@ -67,7 +67,7 @@ const LoginScreen = ({ }) => {
                                     onChange={e => setUsername(e.target.value)}
                                     fullWidth
                                     className="pageInput customInput"
-                                    placeholder='Username'
+                                    placeholder=''
                                 />
                             </Grid>
 

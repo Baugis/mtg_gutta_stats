@@ -7,6 +7,7 @@ import { Typography, useMediaQuery, Theme, Box } from '@mui/material';
 import { countGamesAgainstDecks } from '../Helpers/utils';
 import { checkRetired } from '../Helpers/checkRetired';
 import DeckArchtypes from './DeckArchtypes';
+import axios from 'axios';
 
 interface DeckInfoProps {
     type: 'name' | 'deck';
@@ -350,11 +351,82 @@ const RetiredText = () => {
     return null;
 }
 
-const getDeckStats = () => {
+const DeckStats = (type: any) => {
+    const [games, setGames] = useState(0);
+    const [wins, setWins] = useState(0);
+    const [losses, setLosses] = useState(0);
+    const [winrate, setWinrate] = useState(0);
+
+
     const record = useRecordContext();
     if (!record) return false;
 
+    const fetchStats = async () => {
+        try {
+            const response = await axios({
+                method: 'post',
+                url: 'https://www.magigutta.no/api',
+                data: {
+                    action: 'getDeckStats',
+                    deck_id: record.id,
+                    type: type ? type.type : null
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 
+            console.log("Response: ", response)
+
+            setGames(response?.data?.totalGames);
+            setWins(response?.data?.wins);
+            setLosses(response?.data?.losses);
+            setWinrate(response?.data?.winRate)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchStats();
+    }, [])
+
+    return (
+        <Box display={'flex'} mt={0.5}>
+            <Box flex={1}>
+                <Typography fontSize={18} color={'#F4D144'}>
+                    {games}
+                </Typography>
+                <Typography variant="body2" color={'#707070'}>
+                    Games
+                </Typography>
+            </Box>
+            <Box flex={1}>
+                <Typography fontSize={18} color={'#F4D144'}>
+                    {wins}
+                </Typography>
+                <Typography variant="body2" color={'#707070'}>
+                    Wins
+                </Typography>
+            </Box>
+            <Box flex={1}>
+                <Typography fontSize={18} color={'#F4D144'}>
+                    {losses}
+                </Typography>
+                <Typography variant="body2" color={'#707070'}>
+                    Losses
+                </Typography>
+            </Box>
+            <Box flex={1}>
+                <Typography fontSize={18} color={'#F4D144'}>
+                    {winrate.toFixed(0)}%
+                </Typography>
+                <Typography variant="body2" color={'#707070'}>
+                    Winrate
+                </Typography>
+            </Box>
+        </Box>
+    )
 }
 
 
@@ -413,102 +485,44 @@ export const DeckShow = () => {
 
                                     <Box mt={1}>
                                         <Grid container spacing={2}>
-                                            <Grid item xs={6}>
-                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1}>
+                                            <Grid item xs={12}>
+                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1.5}>
                                                     <Typography fontSize={15} color={'white'}>
-                                                        1 vs 1
+                                                        Head to Head
                                                     </Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={6}>
-                                                            <Box display={'flex'} mt={0.5}>
-                                                                <Typography fontSize={12} color={'#707070'}>
-                                                                    Games
-                                                                </Typography>
-                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
-                                                                    10
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
-                                                            <Box display={'flex'} mt={0.5}>
-                                                                <Typography fontSize={12} color={'#707070'}>
-                                                                    Wins
-                                                                </Typography>
-                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
-                                                                    10
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
-                                                            <Box display={'flex'} mt={0.5}>
-                                                                <Typography fontSize={12} color={'#707070'}>
-                                                                    Winrate
-                                                                </Typography>
-                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
-                                                                    10
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
-                                                            <Box display={'flex'} mt={0.5}>
-                                                                <Typography fontSize={12} color={'#707070'}>
-                                                                    Losses
-                                                                </Typography>
-                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
-                                                                    10
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                    </Grid>
+                                                    <DeckStats type='1v1' />
                                                 </Box>
                                             </Grid>
-                                            <Grid item xs={6}>
-                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1}>
+                                            <Grid item xs={12}>
+                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1.5}>
                                                     <Typography fontSize={15} color={'white'}>
-                                                        3 Man FFA
+                                                        Free For All (3 player)
                                                     </Typography>
-                                                    <Grid container>
-                                                        <Grid item xs={6}>
-                                                            <Box display={'flex'} mt={0.5}>
-                                                                <Typography fontSize={12} color={'#707070'}>
-                                                                    Games
-                                                                </Typography>
-                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
-                                                                    10
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
-                                                            <Box display={'flex'} mt={0.5}>
-                                                                <Typography fontSize={12} color={'#707070'}>
-                                                                    Wins
-                                                                </Typography>
-                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
-                                                                    10
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
-                                                            <Box display={'flex'} mt={0.5}>
-                                                                <Typography fontSize={12} color={'#707070'}>
-                                                                    Winrate
-                                                                </Typography>
-                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
-                                                                    10
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
-                                                            <Box display={'flex'} mt={0.5}>
-                                                                <Typography fontSize={12} color={'#707070'}>
-                                                                    Losses
-                                                                </Typography>
-                                                                <Typography fontSize={12} color={'white'} ml={0.5}>
-                                                                    10
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                    </Grid>
+                                                    <DeckStats type='3_man_ffa' />
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1.5}>
+                                                    <Typography fontSize={15} color={'white'}>
+                                                        Free For All (4 player)
+                                                    </Typography>
+                                                    <DeckStats type='4_man_ffa' />
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1.5}>
+                                                    <Typography fontSize={15} color={'white'}>
+                                                        Two Headed Giant
+                                                    </Typography>
+                                                    <DeckStats type='two_head_giant' />
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Box bgcolor={'#1F2430'} borderRadius={'10px'} p={1.5}>
+                                                    <Typography fontSize={15} color={'white'}>
+                                                        Star format
+                                                    </Typography>
+                                                    <DeckStats type='star' />
                                                 </Box>
                                             </Grid>
                                         </Grid>
