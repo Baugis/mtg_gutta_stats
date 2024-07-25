@@ -453,7 +453,7 @@ export const DeckShow = () => {
                             </Box>
                         </Box>
 
-                        <Box bgcolor={'#050B18'} sx={{ transform: 'translateY(-25px)' }} width={'100%'} borderRadius={'40px 40px 0 0'} px={3.5}>
+                        <Box bgcolor={'#050B18'} sx={{ transform: 'translateY(-50px)' }} width={'100%'} borderRadius={'40px 40px 0 0'} px={3.5}>
                             <Box sx={{ transform: 'translateY(-40px)' }}>
                                 <Box display={'flex'}>
                                     <ImageField source="card_data.image_uris.normal" className="deckShowCardImage" />
